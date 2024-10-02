@@ -14,22 +14,18 @@ export const {
   vars,
 } = createSystem({
   colors: {
-    nipple: "#F098C6",
-    diarrhea: "#655C31",
-    jaundice: "#FEDB1D",
-    banality: "#F9E1A3",
-    death: "#000000",
-    angel: "#FFFFFF",
+    darkPurple: "#17151F",
+    purple: "#341A34",
+    lightPurple: "#B276FF",
+    blue: "#00B1CC",
+    white: "#EAF8FF",
+    darkRed: "#440C13",
+    red: "#F22E41",
   },
   fonts: {
     default: [
       {
-        name: "Poppins",
-        source: "google",
-        weight: 900,
-      },
-      {
-        name: "Poppins",
+        name: "Inter",
         source: "google",
         weight: 400,
       },

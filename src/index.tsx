@@ -1,7 +1,7 @@
 import { Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
-import { vars } from "./ui.js";
+import { Row, Rows, Text, vars } from "./ui.js";
 
 // import { neynar } from 'frog/hubs'
 
@@ -16,35 +16,18 @@ export const app = new Frog({
 app.frame("/", (c) => {
   return c.res({
     image: (
-      <div
-        style={{
-          alignItems: "center",
-          background: "black",
-          backgroundSize: "100% 100%",
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            fontSize: 60,
-            fontStyle: "normal",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: "0 120px",
-            whiteSpace: "pre-wrap",
-          }}
+      <Rows grow>
+        <Row
+          backgroundColor="darkPurple"
+          color="white"
+          textAlign="center"
+          textTransform="uppercase"
+          alignHorizontal="center"
+          alignVertical="center"
         >
-          FARCASTLE
-        </div>
-      </div>
+          <Text size="48">Farcastle</Text>
+        </Row>
+      </Rows>
     ),
     intents: [],
   });
@@ -78,69 +61,26 @@ app.frame("/:chainid/:daoid", async (c) => {
   //   //   now > Number(yeetData.data.yeeter.startTime) &&
   //   //   now < Number(yeetData.data.yeeter.endTime);
 
-  //   // if (!isActive) {
-  //   //   return c.res({
-  //   //     image: <ErrorView message="Yeeter Not Active" />,
-  //   //   });
-  //   // }
-
   //   // const daoid = yeetData.data.yeeter.dao.id;
 
-  //   // const metaRes = await postData(DH_GRAPH_ENDPOINT(graphKey), {
-  //   //   query: `{records(where: { dao: "${daoid.toLowerCase()}", table: "yeetDetails" }, orderBy: createdAt, orderDirection: desc) {id content dao { name } }}`,
-  //   // });
-
-  //   // const meta = addParsedContent(metaRes.data.records[0].content);
-
-  //   // if (!metaRes.data.records[0]) {
-  //   //   return c.res({
-  //   //     image: <ErrorView message="Missing Yeeter Mission" />,
-  //   //   });
-  //   // }
-
   //   // const name = metaRes.data.records[0].dao.name;
-  //   // const mission = meta?.missionStatement || "No Mission";
-  //   // const balance = formatEther(yeetData.data.yeeter.balance);
-  //   // const endTime =
-  //   //   formatShortDateTimeFromSeconds(yeetData.data.yeeter.endTime) || "No End";
-  //   // const goal = formatEther(yeetData.data.yeeter.goal);
-  //   // const minTribute = formatEther(yeetData.data.yeeter.minTribute);
 
   return c.res({
-    action: `/success/${daoid}`,
-    headers: {
-      "Cache-Control": "max-age=0",
-    },
     image: (
-      <div
-        style={{
-          alignItems: "center",
-          background: "black",
-          backgroundSize: "100% 100%",
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            fontSize: 60,
-            fontStyle: "normal",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: "0 120px",
-            whiteSpace: "pre-wrap",
-          }}
+      <Rows grow>
+        <Row
+          backgroundColor="darkPurple"
+          color="white"
+          textAlign="center"
+          textTransform="uppercase"
+          alignHorizontal="center"
+          alignVertical="center"
         >
-          {`Your castle: ${daoid} on: ${chainid}`}
-        </div>
-      </div>
+          <Text size="48">Your Castle</Text>
+          <Text size="20">{daoid}</Text>
+          <Text size="20">on {chainid}</Text>
+        </Row>
+      </Rows>
     ),
     intents: [],
   });
