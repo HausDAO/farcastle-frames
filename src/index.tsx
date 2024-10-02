@@ -2,6 +2,10 @@ import { Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { Row, Rows, Text, vars } from "./ui.js";
+import { GRAPH_URL } from "./utils/constants.js";
+import { postData } from "./utils/helpers.js";
+import { daoHomeQuery } from "./utils/graph-queries.js";
+import { ErrorView } from "./components/ErrorView.js";
 
 // import { neynar } from 'frog/hubs'
 
@@ -37,33 +41,35 @@ app.frame("/:chainid/:daoid", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
 
+  const url = GRAPH_URL[chainid];
+
   console.log("chainid", chainid);
   console.log("daoid", daoid);
+  console.log("url", url);
 
-  //   // const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
+  // handle error
+  // // invalid daoid or chainid
+  // // no url
 
-  //   // if (!graphKey) {
-  //   //   throw new Error("GRAPH_KEY Missing");
-  //   // }
+  const daoData = await postData(url, {
+    query: daoHomeQuery(daoid),
+  });
 
-  //   // const yeetData = await postData(GRAPH_ENDPOINT(graphKey), {
-  //   //   query: `{yeeter(id: "${yeeterid.toLowerCase()}") {id endTime startTime minTribute multiplier goal balance dao { id }}}`,
-  //   // });
+  console.log("daoData", daoData);
 
-  //   // if (!yeetData.data.yeeter) {
-  //   //   return c.res({
-  //   //     image: <ErrorView message="Yeeter Not Found" />,
-  //   //   });
-  //   // }
+  // handle error
+  // // no dao data
 
-  //   // const now = Date.now() / 1000;
-  //   // const isActive =
-  //   //   now > Number(yeetData.data.yeeter.startTime) &&
-  //   //   now < Number(yeetData.data.yeeter.endTime);
+  if (!daoData.data.dao) {
+    return c.res({
+      image: <ErrorView message="Castle Not Found" />,
+    });
+  }
 
-  //   // const daoid = yeetData.data.yeeter.dao.id;
-
-  //   // const name = metaRes.data.records[0].dao.name;
+  const name = daoData.data.dao.name;
+  const vaultCount = daoData.data.dao.vaults.length;
+  const proposalCount = daoData.data.dao.proposalCount;
+  const memberCount = daoData.data.dao.activeMemberCount;
 
   return c.res({
     image: (
@@ -76,9 +82,13 @@ app.frame("/:chainid/:daoid", async (c) => {
           alignHorizontal="center"
           alignVertical="center"
         >
-          <Text size="48">Your Castle</Text>
-          <Text size="20">{daoid}</Text>
-          <Text size="20">on {chainid}</Text>
+          <Text size="24">Your Castle</Text>
+          <Text size="16">{daoid}</Text>
+          <Text size="16">on {chainid}</Text>
+          <Text size="16">{name}</Text>
+          <Text size="16">member: {memberCount}</Text>
+          <Text size="16">proposals: {proposalCount}</Text>
+          <Text size="16">vaults: {vaultCount}</Text>
         </Row>
       </Rows>
     ),
