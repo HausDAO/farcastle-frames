@@ -1,72 +1,114 @@
-import { Button, Frog, TextInput } from 'frog'
-import { devtools } from 'frog/dev'
-import { serveStatic } from 'frog/serve-static'
+import { Frog } from "frog";
+import { devtools } from "frog/dev";
+import { serveStatic } from "frog/serve-static";
+import { request } from "graphql-request";
+
+import { Row, Rows, Text, vars } from "./ui.js";
+import { GRAPH_URL } from "./utils/constants.js";
+import { GET_DAO } from "./utils/graph-queries.js";
+import { ErrorView } from "./components/ErrorView.js";
+import { nowInSeconds } from "./utils/helpers.js";
+
 // import { neynar } from 'frog/hubs'
 
 export const app = new Frog({
-  // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
-  title: 'Frog Frame',
-})
+  title: "FARCASTLE",
+  browserLocation: "https://farcastle.net/",
+  origin: "https://frames.farcastle.net/",
+  assetsPath: "/",
+  ui: { vars },
+});
 
-app.frame('/', (c) => {
-  const { buttonValue, inputText, status } = c
-  const fruit = inputText || buttonValue
+app.frame("/", (c) => {
   return c.res({
     image: (
-      <div
-        style={{
-          alignItems: 'center',
-          background:
-            status === 'response'
-              ? 'linear-gradient(to right, #432889, #17101F)'
-              : 'black',
-          backgroundSize: '100% 100%',
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          height: '100%',
-          justifyContent: 'center',
-          textAlign: 'center',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            color: 'white',
-            fontSize: 60,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
+      <Rows grow>
+        <Row
+          backgroundColor="darkPurple"
+          color="white"
+          textAlign="center"
+          textTransform="uppercase"
+          alignHorizontal="center"
+          alignVertical="center"
         >
-          {status === 'response'
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ''}`
-            : 'Welcome!'}
-        </div>
-      </div>
+          <Text size="48">Farcastle</Text>
+        </Row>
+      </Rows>
     ),
-    intents: [
-      <TextInput placeholder="Enter custom fruit..." />,
-      <Button value="apples">Apples</Button>,
-      <Button value="oranges">Oranges</Button>,
-      <Button value="bananas">Bananas</Button>,
-      status === 'response' && <Button.Reset>Reset</Button.Reset>,
-    ],
-  })
-})
+    intents: [],
+  });
+});
 
-const isCloudflareWorker = typeof caches !== 'undefined'
+app.frame("/:chainid/:daoid", async (c) => {
+  const chainid = c.req.param("chainid");
+  const daoid = c.req.param("daoid");
+
+  const url = GRAPH_URL[chainid];
+
+  console.log("chainid", chainid);
+  console.log("daoid", daoid);
+  console.log("url", url);
+
+  // handle error
+  // // invalid daoid or chainid
+  // // no url
+
+  const daoData = await request<any>(url, GET_DAO, {
+    daoid,
+    now: nowInSeconds(),
+  });
+
+  console.log("daoData", daoData);
+
+  // handle error
+  // // no dao data
+
+  if (!daoData.dao) {
+    return c.res({
+      image: <ErrorView message="Castle Not Found" />,
+    });
+  }
+
+  const name = daoData.dao.name;
+  const vaultCount = daoData.dao.vaults.length || "0";
+  const proposalCount = daoData.dao.proposals.length || "0";
+  const memberCount = daoData.dao.activeMemberCount;
+
+  console.log("proposalCount", proposalCount);
+
+  return c.res({
+    image: (
+      <Rows grow>
+        <Row
+          backgroundColor="darkPurple"
+          color="white"
+          textAlign="center"
+          textTransform="uppercase"
+          alignHorizontal="center"
+          alignVertical="center"
+        >
+          <Text size="24">Your Castle</Text>
+          <Text size="16">{daoid}</Text>
+          <Text size="16">on {chainid}</Text>
+          <Text size="16">{name}</Text>
+          <Text size="16">member: {memberCount}</Text>
+          <Text size="16">active proposals: {proposalCount}</Text>
+          <Text size="16">vaults: {vaultCount}</Text>
+        </Row>
+      </Rows>
+    ),
+    intents: [],
+  });
+});
+
+const isCloudflareWorker = typeof caches !== "undefined";
 if (isCloudflareWorker) {
-  const manifest = await import('__STATIC_CONTENT_MANIFEST')
-  const serveStaticOptions = { manifest, root: './' }
-  app.use('/*', serveStatic(serveStaticOptions))
-  devtools(app, { assetsPath: '/frog', serveStatic, serveStaticOptions })
+  const manifest = await import("__STATIC_CONTENT_MANIFEST");
+  const serveStaticOptions = { manifest, root: "./" };
+  app.use("/*", serveStatic(serveStaticOptions));
+  devtools(app, { assetsPath: "/frog", serveStatic, serveStaticOptions });
 } else {
-  devtools(app, { serveStatic })
+  devtools(app, { serveStatic });
 }
 
-export default app
+export default app;
