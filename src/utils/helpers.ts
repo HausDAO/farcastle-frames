@@ -22,3 +22,8 @@ export const addParsedContent = (
     return;
   }
 };
+
+export const nowInSeconds = (): string => {
+  const now = new Date();
+  return Math.floor(now.getTime()).toString();
+};

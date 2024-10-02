@@ -1,11 +1,13 @@
 import { Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
+import { request } from "graphql-request";
+
 import { Row, Rows, Text, vars } from "./ui.js";
 import { GRAPH_URL } from "./utils/constants.js";
-import { postData } from "./utils/helpers.js";
-import { daoHomeQuery } from "./utils/graph-queries.js";
+import { GET_DAO } from "./utils/graph-queries.js";
 import { ErrorView } from "./components/ErrorView.js";
+import { nowInSeconds } from "./utils/helpers.js";
 
 // import { neynar } from 'frog/hubs'
 
@@ -51,8 +53,9 @@ app.frame("/:chainid/:daoid", async (c) => {
   // // invalid daoid or chainid
   // // no url
 
-  const daoData = await postData(url, {
-    query: daoHomeQuery(daoid),
+  const daoData = await request<any>(url, GET_DAO, {
+    daoid,
+    now: nowInSeconds(),
   });
 
   console.log("daoData", daoData);
@@ -60,16 +63,18 @@ app.frame("/:chainid/:daoid", async (c) => {
   // handle error
   // // no dao data
 
-  if (!daoData.data.dao) {
+  if (!daoData.dao) {
     return c.res({
       image: <ErrorView message="Castle Not Found" />,
     });
   }
 
-  const name = daoData.data.dao.name;
-  const vaultCount = daoData.data.dao.vaults.length;
-  const proposalCount = daoData.data.dao.proposalCount;
-  const memberCount = daoData.data.dao.activeMemberCount;
+  const name = daoData.dao.name;
+  const vaultCount = daoData.dao.vaults.length || "0";
+  const proposalCount = daoData.dao.proposals.length || "0";
+  const memberCount = daoData.dao.activeMemberCount;
+
+  console.log("proposalCount", proposalCount);
 
   return c.res({
     image: (
@@ -87,7 +92,7 @@ app.frame("/:chainid/:daoid", async (c) => {
           <Text size="16">on {chainid}</Text>
           <Text size="16">{name}</Text>
           <Text size="16">member: {memberCount}</Text>
-          <Text size="16">proposals: {proposalCount}</Text>
+          <Text size="16">active proposals: {proposalCount}</Text>
           <Text size="16">vaults: {vaultCount}</Text>
         </Row>
       </Rows>
