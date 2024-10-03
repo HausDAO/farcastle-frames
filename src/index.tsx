@@ -79,7 +79,7 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
   const proposalCount = daoData.dao.proposals.length || "0";
   const memberCount = daoData.dao.activeMemberCount;
   const profile =
-    daoData.dao.record[0] && parseContent(daoData.dao.record[0].content);
+    daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
 
   console.log("profile", profile);
 
@@ -101,7 +101,14 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
           <Text size="16">member: {memberCount}</Text>
           <Text size="16">active proposals: {proposalCount}</Text>
           <Text size="16">vaults: {vaultCount}</Text>
-          <Text size="16">img path: {profile.avatarImg}</Text>
+          {profile?.avatarImg && (
+            <img
+              src={profile.avatarImg}
+              width="300px"
+              height="300px"
+              style={{ borderRadius: "50%" }}
+            />
+          )}
         </Row>
       </Rows>
     ),
