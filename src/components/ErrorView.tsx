@@ -17,7 +17,8 @@ export function ErrorView({ message }: ErrorViewProps) {
         alignHorizontal="center"
         alignVertical="center"
       >
-        <Text size="48">Error: {message}</Text>
+        <Text size="48">Game Over</Text>
+        <Text size="32">{message}</Text>
       </Row>
     </Rows>
   );

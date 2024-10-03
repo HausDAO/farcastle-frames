@@ -8,6 +8,7 @@ import { GRAPH_URL } from "./utils/constants.js";
 import { GET_DAO } from "./utils/graph-queries.js";
 import { ErrorView } from "./components/ErrorView.js";
 import { nowInSeconds, parseContent } from "./utils/helpers.js";
+import { isChainId, isDaoid } from "./utils/validators.js";
 
 // import { neynar } from 'frog/hubs'
 
@@ -47,13 +48,14 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
 
   const url = chainid && GRAPH_URL[chainid];
 
-  console.log("chainid", chainid);
-  console.log("daoid", daoid);
-  console.log("url", url);
+  const validDaoid = isDaoid(daoid);
+  const validChainid = isChainId(chainid);
 
-  // handle error
-  // // invalid daoid or chainid
-  // // no url
+  if (!validDaoid || !validChainid) {
+    return c.res({
+      image: <ErrorView message="Invalid DAO or CHAIN" />,
+    });
+  }
 
   const daoData = await request<any>(url, GET_DAO, {
     daoid,
@@ -62,12 +64,9 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
 
   console.log("daoData", daoData);
 
-  // handle error
-  // // no dao data
-
   if (!daoData.dao) {
     return c.res({
-      image: <ErrorView message="Castle Not Found" />,
+      image: <ErrorView message="DAO Not Found" />,
     });
   }
 
