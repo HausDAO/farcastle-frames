@@ -71,13 +71,11 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
     });
   }
 
-  // TODO: parse profile for image
-  console.log("profile", daoData.dao.profile);
-
   const name = daoData.dao.name;
   const vaultCount = daoData.dao.vaults.length || "0";
   const proposalCount = daoData.dao.proposals.length || "0";
   const memberCount = daoData.dao.activeMemberCount;
+  // TODO: fallback for missing image
   const profile =
     daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
 
