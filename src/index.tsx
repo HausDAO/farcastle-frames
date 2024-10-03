@@ -7,7 +7,7 @@ import { Row, Rows, Text, vars } from "./ui.js";
 import { GRAPH_URL } from "./utils/constants.js";
 import { GET_DAO } from "./utils/graph-queries.js";
 import { ErrorView } from "./components/ErrorView.js";
-import { nowInSeconds } from "./utils/helpers.js";
+import { nowInSeconds, parseContent } from "./utils/helpers.js";
 
 // import { neynar } from 'frog/hubs'
 
@@ -18,6 +18,8 @@ export const app = new Frog({
   assetsPath: "/",
   ui: { vars },
 });
+
+// dao/0x2105/0x1503bd5f6f082f7fbd36438cc416cd67849c0bec
 
 app.frame("/", (c) => {
   return c.res({
@@ -39,11 +41,11 @@ app.frame("/", (c) => {
   });
 });
 
-app.frame("/:chainid/:daoid", async (c) => {
+app.frame("/dao/:chainid/:daoid", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
 
-  const url = GRAPH_URL[chainid];
+  const url = chainid && GRAPH_URL[chainid];
 
   console.log("chainid", chainid);
   console.log("daoid", daoid);
@@ -69,12 +71,17 @@ app.frame("/:chainid/:daoid", async (c) => {
     });
   }
 
+  // TODO: parse profile for image
+  console.log("profile", daoData.dao.profile);
+
   const name = daoData.dao.name;
   const vaultCount = daoData.dao.vaults.length || "0";
   const proposalCount = daoData.dao.proposals.length || "0";
   const memberCount = daoData.dao.activeMemberCount;
+  const profile =
+    daoData.dao.record[0] && parseContent(daoData.dao.record[0].content);
 
-  console.log("proposalCount", proposalCount);
+  console.log("profile", profile);
 
   return c.res({
     image: (
@@ -94,6 +101,7 @@ app.frame("/:chainid/:daoid", async (c) => {
           <Text size="16">member: {memberCount}</Text>
           <Text size="16">active proposals: {proposalCount}</Text>
           <Text size="16">vaults: {vaultCount}</Text>
+          <Text size="16">img path: {profile.avatarImg}</Text>
         </Row>
       </Rows>
     ),

@@ -18,33 +18,14 @@ export const GET_DAO = gql`
       ) {
         id
       }
+      profile: records(
+        first: 1
+        orderBy: createdAt
+        orderDirection: desc
+        where: { table: "daoProfile" }
+      ) {
+        content
+      }
     }
   }
 `;
-
-// activeProposals: proposals(
-//     first: 101
-//     orderBy: createdAt
-//     orderDirection: desc
-//     where: { cancelled: false, sponsored: true, graceEnds_gt: $now }
-
-// profile: records(
-//     first: 1
-//     orderBy: createdAt
-//     orderDirection: desc
-//     where: { table: "daoProfile" }
-//   ) {
-//     createdAt
-//     createdBy
-//     contentType
-//     content
-//   }
-
-// vaults (where: {active: true}){
-//     id
-//     createdAt
-//     active
-//     ragequittable
-//     name
-//     safeAddress
-//   }

@@ -11,19 +11,18 @@ export const postData = async (url = "", data = {}) => {
   }
 };
 
-export const addParsedContent = (
-  content: string
-): { missionStatement: string; projectDetails: string } | undefined => {
-  try {
-    const obj = JSON.parse(content);
-    return obj;
-  } catch (e) {
-    console.log("err", e);
-    return;
-  }
-};
-
 export const nowInSeconds = (): string => {
   const now = new Date();
   return Math.floor(now.getTime()).toString();
+};
+
+export const parseContent = (content: string | undefined) => {
+  if (content) {
+    try {
+      return JSON.parse(content);
+    } catch (e) {
+      console.log("err", e);
+      return;
+    }
+  }
 };
