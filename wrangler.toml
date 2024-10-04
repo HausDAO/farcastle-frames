@@ -1,5 +1,6 @@
-name = "frog-template"
-compatibility_date = "2023-12-01"
+name = "farcastle-frames"
+main = "src/index.tsx"
+compatibility_date = "2024-09-23"
 compatibility_flags = [ "nodejs_compat" ]
 
 [site]
