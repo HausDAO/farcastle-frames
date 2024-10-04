@@ -5,6 +5,9 @@ compatibility_flags = [ "nodejs_compat" ]
 [site]
 bucket = "./public"
 
+[observability]
+enabled = true
+
 # [vars]
 # MY_VARIABLE = "production_value"
 
