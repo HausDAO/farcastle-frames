@@ -7,7 +7,6 @@ import { Row, Rows, Text, vars } from "./ui.js";
 import { GRAPH_URL } from "./utils/constants.js";
 import { GET_PROPOSAL } from "./utils/graph-queries.js";
 import { ErrorView } from "./components/ErrorView.js";
-import { nowInSeconds, parseContent } from "./utils/helpers.js";
 import { isChainId, isAddress, isNumberish } from "./utils/validators.js";
 
 // import { neynar } from 'frog/hubs'
@@ -47,13 +46,14 @@ app.frame("/:chainid/:daoid/:proposalid", async (c) => {
   const daoid = c.req.param("daoid");
   const proposalid = c.req.param("proposalid");
 
-  const url = chainid && GRAPH_URL[chainid];
+  const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
+  const url = chainid && GRAPH_URL(chainid, graphKey);
 
   const validDaoid = isAddress(daoid);
   const validChainid = isChainId(chainid);
   const validProposalid = isNumberish(proposalid);
 
-  if (!validDaoid || !validChainid || !validProposalid) {
+  if (!validDaoid || !validChainid || !validProposalid || !url) {
     return c.res({
       image: <ErrorView message="Invalid Params" />,
     });

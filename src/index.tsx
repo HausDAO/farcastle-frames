@@ -48,12 +48,13 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
 
-  const url = chainid && GRAPH_URL[chainid];
+  const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
+  const url = chainid && GRAPH_URL(chainid, graphKey);
 
   const validDaoid = isAddress(daoid);
   const validChainid = isChainId(chainid);
 
-  if (!validDaoid || !validChainid) {
+  if (!validDaoid || !validChainid || !url) {
     return c.res({
       image: <ErrorView message="Invalid Params" />,
     });
