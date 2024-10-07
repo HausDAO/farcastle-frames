@@ -29,3 +29,12 @@ export const GET_DAO = gql`
     }
   }
 `;
+
+export const GET_PROPOSAL = gql`
+  query proposal($daoid: String!, $proposalid: String!) {
+    proposals(where: { proposalId: $proposalid, dao: $daoid }) {
+      id
+      createdAt
+    }
+  }
+`;
