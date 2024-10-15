@@ -14,6 +14,8 @@ import { app as proposalApp } from "./proposal.js";
 
 // import { neynar } from 'frog/hubs'
 
+// 𝛓ⲧⲟⲛⲉⲕⲉⲉⲣⲉꞅ𝛓
+
 export const app = new Frog({
   title: "FARCASTLE",
   browserLocation: "https://farcastle.net/",
@@ -28,7 +30,7 @@ app.frame("/", (c) => {
       "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
     intents: [
       <Button.Link href="https://warpcast.com/~/channel/farcastle/join">
-        Join
+        Join Channel
       </Button.Link>,
     ],
   });
