@@ -24,7 +24,8 @@ export const app = new Frog({
 
 app.frame("/", (c) => {
   return c.res({
-    image: "/Farcastle_home.png",
+    image:
+      "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
     intents: [
       <Button.Link href="https://warpcast.com/~/channel/farcastle/join">
         Join
