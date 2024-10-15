@@ -1,4 +1,4 @@
-import { Frog } from "frog";
+import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { request } from "graphql-request";
@@ -14,6 +14,8 @@ import { app as proposalApp } from "./proposal.js";
 
 // import { neynar } from 'frog/hubs'
 
+// 𝛓ⲧⲟⲛⲉⲕⲉⲉⲣⲉꞅ𝛓
+
 export const app = new Frog({
   title: "FARCASTLE",
   browserLocation: "https://farcastle.net/",
@@ -22,25 +24,15 @@ export const app = new Frog({
   ui: { vars },
 });
 
-app.route("/proposal", proposalApp);
-
 app.frame("/", (c) => {
   return c.res({
-    image: (
-      <Rows grow>
-        <Row
-          backgroundColor="darkPurple"
-          color="white"
-          textAlign="center"
-          textTransform="uppercase"
-          alignHorizontal="center"
-          alignVertical="center"
-        >
-          <Text size="48">Farcastle</Text>
-        </Row>
-      </Rows>
-    ),
-    intents: [],
+    image:
+      "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
+    intents: [
+      <Button.Link href="https://warpcast.com/~/channel/farcastle/join">
+        Join Channel
+      </Button.Link>,
+    ],
   });
 });
 
@@ -124,6 +116,8 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
     intents: [],
   });
 });
+
+app.route("/proposal", proposalApp);
 
 const isCloudflareWorker = typeof caches !== "undefined";
 if (isCloudflareWorker) {
