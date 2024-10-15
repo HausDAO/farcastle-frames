@@ -1,6 +1,6 @@
 /** @jsxImportSource frog/jsx */
-import { Rows, Row } from "../ui.js";
-import { Text } from "../ui.js";
+import { Rows, Row } from "./ui.js";
+import { Text } from "./ui.js";
 
 interface ErrorViewProps {
   message: string;
