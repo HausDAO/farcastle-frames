@@ -5,23 +5,23 @@ import { request } from "graphql-request";
 
 import { Row, Rows, Text } from "./ui.js";
 import { FROG_APP_CONFIG, GRAPH_URL } from "./utils/constants.js";
-import { GET_PROPOSAL } from "./utils/graph-queries.js";
+import { GET_DAO } from "./utils/graph-queries.js";
 import { ErrorView } from "./components/ErrorView.js";
-import { isChainId, isAddress, isNumberish } from "./utils/validators.js";
+import { nowInSeconds, parseContent } from "./utils/helpers.js";
+import { isChainId, isAddress } from "./utils/validators.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
 app.frame("/", (c) => {
   return c.res({
-    image: <ErrorView message="Invalid Proposal Params" />,
+    image: <ErrorView message="Invalid Dao Params" />,
     intents: [],
   });
 });
 
-app.frame("/:chainid/:daoid/:proposalid", async (c) => {
+app.frame("/dao/:chainid/:daoid", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
-  const proposalid = c.req.param("proposalid");
 
   // @ts-ignore
   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
@@ -29,28 +29,30 @@ app.frame("/:chainid/:daoid/:proposalid", async (c) => {
 
   const validDaoid = isAddress(daoid);
   const validChainid = isChainId(chainid);
-  const validProposalid = isNumberish(proposalid);
 
-  if (!validDaoid || !validChainid || !validProposalid || !url) {
+  if (!validDaoid || !validChainid || !url) {
     return c.res({
       image: <ErrorView message="Invalid Params" />,
     });
   }
 
-  const proposalData = await request<any>(url, GET_PROPOSAL, {
+  const daoData = await request<any>(url, GET_DAO, {
     daoid,
-    proposalid,
+    now: nowInSeconds(),
   });
 
-  const proposal = proposalData.proposals[0];
-
-  if (!proposal) {
+  if (!daoData.dao) {
     return c.res({
-      image: <ErrorView message="Proposal Not Found" />,
+      image: <ErrorView message="DAO Not Found" />,
     });
   }
 
-  const createdAt = proposal.createdAt;
+  const name = daoData.dao.name;
+  const vaultCount = daoData.dao.vaults.length || "0";
+  const proposalCount = daoData.dao.proposals.length || "0";
+  const memberCount = daoData.dao.activeMemberCount;
+  const profile =
+    daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
 
   return c.res({
     image: (
@@ -63,10 +65,31 @@ app.frame("/:chainid/:daoid/:proposalid", async (c) => {
           alignHorizontal="center"
           alignVertical="center"
         >
-          <Text size="24">Proposal {proposalid}</Text>
+          <Text size="24">Your Castle</Text>
           <Text size="16">{daoid}</Text>
           <Text size="16">on {chainid}</Text>
-          <Text size="16">at {createdAt}</Text>
+          <Text size="16">{name}</Text>
+          <Text size="16">member: {memberCount}</Text>
+          <Text size="16">active proposals: {proposalCount}</Text>
+          <Text size="16">vaults: {vaultCount}</Text>
+          {profile?.avatarImg ? (
+            <img
+              src={profile.avatarImg}
+              width="300px"
+              height="300px"
+              style={{ borderRadius: "50%" }}
+            />
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                width: "300px",
+                height: "300px",
+                borderRadius: "50%",
+                backgroundColor: "#341A34",
+              }}
+            />
+          )}
         </Row>
       </Rows>
     ),
