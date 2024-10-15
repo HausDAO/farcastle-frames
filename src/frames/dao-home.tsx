@@ -3,12 +3,12 @@ import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { request } from "graphql-request";
 
-import { Row, Rows, Text } from "./ui.js";
-import { FROG_APP_CONFIG, GRAPH_URL } from "./utils/constants.js";
-import { GET_DAO } from "./utils/graph-queries.js";
-import { ErrorView } from "./components/ErrorView.js";
-import { nowInSeconds, parseContent } from "./utils/helpers.js";
-import { isChainId, isAddress } from "./utils/validators.js";
+import { Row, Rows, Text } from "../components/ui.js";
+import { FROG_APP_CONFIG, GRAPH_URL } from "../utils/constants.js";
+import { GET_DAO } from "../utils/graph-queries.js";
+import { ErrorView } from "../components/ErrorView.js";
+import { nowInSeconds, parseContent } from "../utils/helpers.js";
+import { isChainId, isAddress } from "../utils/validators.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 

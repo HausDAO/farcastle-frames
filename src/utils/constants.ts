@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { vars } from "../ui";
+import { vars } from "../components/ui";
 
 type KEYCHAIN = {
   [key: string]: string;
