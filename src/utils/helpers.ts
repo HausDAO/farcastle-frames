@@ -11,10 +11,7 @@ export const postData = async (url = "", data = {}) => {
   }
 };
 
-export const nowInSeconds = (): string => {
-  const now = new Date();
-  return Math.floor(now.getTime()).toString();
-};
+export const nowInSeconds = (): number => new Date().getTime() / 1000;
 
 export const parseContent = (content: string | undefined) => {
   if (content) {

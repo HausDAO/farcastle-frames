@@ -5,6 +5,7 @@ import { FROG_APP_CONFIG } from "./utils/constants.js";
 
 import { app as daoApp } from "./frames/dao-home.js";
 import { app as proposalApp } from "./frames/proposal.js";
+import { app as voteApp } from "./frames/vote.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
@@ -22,6 +23,7 @@ app.frame("/", (c) => {
 
 app.route("/dao", daoApp);
 app.route("/proposal", proposalApp);
+app.route("/proposal/vote", voteApp);
 
 const isCloudflareWorker = typeof caches !== "undefined";
 if (isCloudflareWorker) {
@@ -29,7 +31,7 @@ if (isCloudflareWorker) {
   const manifest = await import("__STATIC_CONTENT_MANIFEST");
   const serveStaticOptions = { manifest, root: "./" };
   app.use("/*", serveStatic(serveStaticOptions));
-  devtools(app, { assetsPath: "/frog", serveStatic, serveStaticOptions });
+  devtools(app, { assetsPath: "/", serveStatic, serveStaticOptions });
 } else {
   devtools(app, { serveStatic });
 }

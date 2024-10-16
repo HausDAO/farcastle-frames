@@ -19,7 +19,7 @@ app.frame("/", (c) => {
   });
 });
 
-app.frame("/dao/:chainid/:daoid", async (c) => {
+app.frame("/:chainid/:daoid", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
 
@@ -38,7 +38,7 @@ app.frame("/dao/:chainid/:daoid", async (c) => {
 
   const daoData = await request<any>(url, GET_DAO, {
     daoid,
-    now: nowInSeconds(),
+    now: Math.floor(nowInSeconds()).toString(),
   });
 
   if (!daoData.dao) {
@@ -103,7 +103,7 @@ if (isCloudflareWorker) {
   const manifest = await import("__STATIC_CONTENT_MANIFEST");
   const serveStaticOptions = { manifest, root: "./" };
   app.use("/*", serveStatic(serveStaticOptions));
-  devtools(app, { assetsPath: "/frog", serveStatic, serveStaticOptions });
+  devtools(app, { assetsPath: "/", serveStatic, serveStaticOptions });
 } else {
   devtools(app, { serveStatic });
 }

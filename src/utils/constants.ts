@@ -14,10 +14,16 @@ export const GRAPH_URL = (chainId: string, graphKey: string) => {
   return urls[chainId];
 };
 
+const isCloudflareWorker = typeof caches !== "undefined";
 export const FROG_APP_CONFIG = {
   title: "FARCASTLE",
-  browserLocation: "https://farcastle.net/",
-  origin: "https://frames.farcastle.net/",
+  browserLocation: "https://farcastle.net",
+  // origin: "https://frames.farcastle.net",
+  origin: isCloudflareWorker ? "https://frames.farcastle.net" : "",
   assetsPath: "/",
+  basePath: "/",
+  headers: {
+    "cache-control": "max-age=0",
+  },
   ui: { vars },
 };
