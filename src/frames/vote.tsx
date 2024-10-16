@@ -1,14 +1,19 @@
-import { Frog } from "frog";
+import { Button, FrameIntent, Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { request } from "graphql-request";
 
 import { Row, Rows, Text } from "../components/ui.js";
-import { FROG_APP_CONFIG, GRAPH_URL } from "../utils/constants.js";
+import { FROG_APP_CONFIG, GRAPH_URL, TX_CHAIN_ID } from "../utils/constants.js";
 import { GET_PROPOSAL_VOTES } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
 import { isChainId, isAddress, isNumberish } from "../utils/validators.js";
-import { getProposalStatus } from "../utils/proposals-status.js";
+import {
+  getProposalStatus,
+  PROPOSAL_STATUS,
+} from "../utils/proposals-status.js";
+import { fromWei } from "../utils/helpers.js";
+import { SuccessView } from "../components/SuccessView.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
@@ -19,7 +24,7 @@ app.frame("/", (c) => {
   });
 });
 
-// 0x2105/0x1503bd5f6f082f7fbd36438cc416cd67849c0bec/7
+// 0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b/proposal/2
 
 app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
   const chainid = c.req.param("chainid");
@@ -29,8 +34,6 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
   // @ts-ignore
   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
   const url = chainid && GRAPH_URL(chainid, graphKey);
-
-  console.log("url", url);
 
   const validDaoid = isAddress(daoid);
   const validChainid = isChainId(chainid);
@@ -51,7 +54,13 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
 
   console.log("proposal", proposal);
 
-  const status = getProposalStatus(proposal);
+  // display yes v no
+
+  // if status is in voting
+  // // find user address to see if voted and if member - might need another query
+  // // show button if not
+  // else
+  // //  display based on status
 
   if (!proposal) {
     return c.res({
@@ -59,7 +68,29 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
     });
   }
 
+  const status = getProposalStatus(proposal);
+  const yes = fromWei(proposal.yesBalance);
+  const no = fromWei(proposal.noBalance);
+
+  console.log("status", status);
+  console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
+
+  let intents: FrameIntent | FrameIntent[] = [];
+  if (status === PROPOSAL_STATUS.voting) {
+    intents = [
+      <Button.Transaction target={`/tx/${chainid}/${daoid}/${proposalid}/true`}>
+        Yes
+      </Button.Transaction>,
+      <Button.Transaction
+        target={`/tx/${chainid}/${daoid}/${proposalid}/false`}
+      >
+        No
+      </Button.Transaction>,
+    ];
+  }
+
   return c.res({
+    action: "/success",
     image: (
       <Rows grow>
         <Row
@@ -72,12 +103,66 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
         >
           <Text size="24">Proposal {proposalid}</Text>
           <Text size="16">status: {status}</Text>
+          <Text size="16">yes: {yes}</Text>
+          <Text size="16">no: {no}</Text>
         </Row>
       </Rows>
     ),
+    intents,
+  });
+});
+
+app.transaction("/tx/:chainid/:daoid/:proposalid/:approved", (c) => {
+  const chainid = c.req.param("chainid");
+  const daoid = c.req.param("daoid");
+  const proposalid = c.req.param("proposalid");
+  const approved = c.req.param("approved");
+  console.log('approved === "true"', approved === "true");
+
+  return c.contract({
+    abi: [
+      {
+        inputs: [
+          { internalType: "uint32", name: "id", type: "uint32" },
+          { internalType: "bool", name: "approved", type: "bool" },
+        ],
+        name: "submitVote",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    chainId: TX_CHAIN_ID[chainid],
+    functionName: "submitVote",
+    args: [Number(proposalid), approved === "true"],
+    to: daoid as `0x${string}`,
+  });
+});
+
+app.frame("/success", (c) => {
+  return c.res({
+    image: <SuccessView message="Your Vote Counted" />,
+    // intents: [<Button action={`/vote/${chainid}/${daoid}/${proposalid}`}>Votes</Button>],
     intents: [],
   });
 });
+
+// app.frame(`/success/:daoid`, c => {
+//   const daoid = c.req.param('daoid');
+//   return c.res({
+//     image: '/success.c725c72095.png',
+//     headers: {
+//       'Content-Type': 'image/png',
+//     },
+//     intents: [
+//       <Button.Link
+//         href={`https://app.yeet.haus/#/molochV3/0x2105/${daoid.toLowerCase()}`}
+//       >
+//         View Project
+//       </Button.Link>,
+//     ],
+//   });
+// });
 
 const isCloudflareWorker = typeof caches !== "undefined";
 if (isCloudflareWorker) {
