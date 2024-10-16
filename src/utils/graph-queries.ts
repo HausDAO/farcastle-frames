@@ -38,3 +38,31 @@ export const GET_PROPOSAL = gql`
     }
   }
 `;
+
+export const GET_PROPOSAL_VOTES = gql`
+  query proposal($daoid: String!, $proposalid: String!) {
+    proposals(where: { proposalId: $proposalid, dao: $daoid }) {
+      id
+      createdAt
+      sponsored
+      cancelled
+      passed
+      actionFailed
+      processed
+      votingStarts
+      votingEnds
+      expiration
+      graceEnds
+      votingPeriod
+      gracePeriod
+      yesBalance
+      noBalance
+      maxTotalSharesAndLootAtYesVote
+      dao {
+        minRetentionPercent
+        totalShares
+        quorumPercent
+      }
+    }
+  }
+`;
