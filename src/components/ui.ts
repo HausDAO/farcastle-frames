@@ -24,7 +24,14 @@ export const {
   fonts: {
     default: [
       {
-        name: 'Inter',
+        name: 'Mulish',
+        source: 'google',
+        weight: 500,
+      },
+    ],
+    VT323: [
+      {
+        name: 'VT323',
         source: 'google',
         weight: 400,
       },

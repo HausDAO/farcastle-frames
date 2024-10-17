@@ -40,7 +40,7 @@ app.frame('/', c => {
           <Row height="3/4">
             <Columns grow>
               <Column width="5/7" gap="16">
-                <Heading color="moonstone" size="32">
+                <Heading font="VT323" color="moonstone" size="48">
                   {name}
                 </Heading>
                 <Text color="aliceBlue" size="24">
@@ -52,27 +52,27 @@ app.frame('/', c => {
           </Row>
           <Row height="1/4">
             <Columns>
-              <Column gap="16">
-                <Heading color="moonstone" size="20">
+              <Column width="1/4" gap="16">
+                <Heading font="VT323" color="moonstone" size="32">
                   Members
                 </Heading>
-                <Text color="aliceBlue" size="20">
+                <Text color="aliceBlue" size="24">
                   {memberCount}
                 </Text>
               </Column>
-              <Column gap="16">
-                <Heading color="moonstone" size="20">
+              <Column width="1/4" gap="16">
+                <Heading font="VT323" color="moonstone" size="32">
                   Safes
                 </Heading>
-                <Text color="aliceBlue" size="20">
+                <Text color="aliceBlue" size="24">
                   {vaultCount}
                 </Text>
               </Column>
-              <Column gap="16">
-                <Heading color="moonstone" size="20">
+              <Column width="2/4" gap="16">
+                <Heading font="VT323" color="moonstone" size="32">
                   Active Proposals
                 </Heading>
-                <Text color="aliceBlue" size="20">
+                <Text color="aliceBlue" size="24">
                   {proposalCount}
                 </Text>
               </Column>
