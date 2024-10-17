@@ -1,6 +1,6 @@
-import { Frog } from 'frog';
-import { devtools } from 'frog/dev';
-import { serveStatic } from 'frog/serve-static';
+import { Frog } from "frog";
+import { devtools } from "frog/dev";
+import { serveStatic } from "frog/serve-static";
 // import { request } from 'graphql-request';
 
 import {
@@ -11,8 +11,8 @@ import {
   Column,
   Heading,
   Text,
-} from '../components/ui.js';
-import { FROG_APP_CONFIG } from '../utils/constants.js';
+} from "../components/ui.js";
+import { FROG_APP_CONFIG } from "../utils/constants.js";
 // import { GET_DAO } from '../utils/graph-queries.js';
 // import { ErrorView } from '../components/ErrorView.js';
 // import { nowInSeconds, parseContent } from '../utils/helpers.js';
@@ -22,11 +22,11 @@ export const app = new Frog(FROG_APP_CONFIG);
 
 // style/0x2105/0x1503bd5f6f082f7fbd36438cc416cd67849c0bec
 
-app.frame('/', c => {
-  const name = 'Big Boner DAO';
-  const memberCount = '11';
-  const vaultCount = '2';
-  const proposalCount = '69';
+app.frame("/", (c) => {
+  const name = "Big Boner DAO";
+  const memberCount = "11";
+  const vaultCount = "2";
+  const proposalCount = "69";
 
   return c.res({
     image: (
@@ -85,18 +85,18 @@ app.frame('/', c => {
   });
 });
 
-app.frame('/style', async c => {
-  console.log('/style route accessed');
-  const name = 'Boner';
-  const vaultCount = '2';
-  const proposalCount = '69';
+app.frame("/style", async (c) => {
+  console.log("/style route accessed");
+  const name = "Boner";
+  const vaultCount = "2";
+  const proposalCount = "69";
 
   return c.res({
     image: (
       <Rows grow>
         <Row
           backgroundColor="darkPurple"
-          color="white"
+          color="moonstone"
           textAlign="center"
           textTransform="uppercase"
           alignHorizontal="center"
@@ -112,13 +112,13 @@ app.frame('/style', async c => {
   });
 });
 
-const isCloudflareWorker = typeof caches !== 'undefined';
+const isCloudflareWorker = typeof caches !== "undefined";
 if (isCloudflareWorker) {
   // @ts-ignore
-  const manifest = await import('__STATIC_CONTENT_MANIFEST');
-  const serveStaticOptions = { manifest, root: './' };
-  app.use('/*', serveStatic(serveStaticOptions));
-  devtools(app, { assetsPath: '/', serveStatic, serveStaticOptions });
+  const manifest = await import("__STATIC_CONTENT_MANIFEST");
+  const serveStaticOptions = { manifest, root: "./" };
+  app.use("/*", serveStatic(serveStaticOptions));
+  devtools(app, { assetsPath: "/", serveStatic, serveStaticOptions });
 } else {
   devtools(app, { serveStatic });
 }

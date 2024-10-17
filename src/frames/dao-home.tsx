@@ -3,12 +3,16 @@ import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { request } from "graphql-request";
 
-import { Row, Rows, Text } from "../components/ui.js";
 import { FROG_APP_CONFIG, GRAPH_URL } from "../utils/constants.js";
 import { GET_DAO } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
-import { nowInSeconds, parseContent } from "../utils/helpers.js";
+import {
+  normalizeCharacters,
+  nowInSeconds,
+  parseContent,
+} from "../utils/helpers.js";
 import { isChainId, isAddress } from "../utils/validators.js";
+import { DaoView } from "../components/DaoView.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
@@ -47,51 +51,29 @@ app.frame("/:chainid/:daoid", async (c) => {
     });
   }
 
-  const name = daoData.dao.name;
+  const name = normalizeCharacters(daoData.dao.name);
   const vaultCount = daoData.dao.vaults.length || "0";
   const proposalCount = daoData.dao.proposals.length || "0";
   const memberCount = daoData.dao.activeMemberCount;
   const profile =
     daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
+  let description = "-";
+  if (profile && profile.description !== "") {
+    description = normalizeCharacters(profile.description);
+  }
+
+  // console.log("profile", profile);
 
   return c.res({
     image: (
-      <Rows grow>
-        <Row
-          backgroundColor="darkPurple"
-          color="white"
-          textAlign="center"
-          textTransform="uppercase"
-          alignHorizontal="center"
-          alignVertical="center"
-        >
-          <Text size="24">Your Castle</Text>
-          <Text size="16">{daoid}</Text>
-          <Text size="16">on {chainid}</Text>
-          <Text size="16">{name}</Text>
-          <Text size="16">member: {memberCount}</Text>
-          <Text size="16">active proposals: {proposalCount}</Text>
-          <Text size="16">vaults: {vaultCount}</Text>
-          {profile?.avatarImg ? (
-            <img
-              src={profile.avatarImg}
-              width="300px"
-              height="300px"
-              style={{ borderRadius: "50%" }}
-            />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                width: "300px",
-                height: "300px",
-                borderRadius: "50%",
-                backgroundColor: "#341A34",
-              }}
-            />
-          )}
-        </Row>
-      </Rows>
+      <DaoView
+        name={name}
+        description={description}
+        memberCount={memberCount}
+        vaultCount={vaultCount}
+        proposalCount={proposalCount}
+        img={profile?.avatarImg}
+      />
     ),
     intents: [],
   });
