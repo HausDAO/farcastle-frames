@@ -1,4 +1,4 @@
-import { createSystem } from "frog/ui";
+import { createSystem } from 'frog/ui';
 
 export const {
   Box,
@@ -14,19 +14,25 @@ export const {
   vars,
 } = createSystem({
   colors: {
-    darkPurple: "#17151F",
-    purple: "#341A34",
-    lightPurple: "#B276FF",
-    blue: "#00B1CC",
-    white: "#EAF8FF",
-    darkRed: "#440C13",
-    red: "#F22E41",
+    raisinBlack: '#17151F',
+    darkPurple: '#341A34',
+    moonstone: '#00B1CC',
+    aliceBlue: '#EAF8FF',
+    rasedaGreen: '#707C4E',
+    rustyRed: '#CD4A50',
   },
   fonts: {
     default: [
       {
-        name: "Inter",
-        source: "google",
+        name: 'Mulish',
+        source: 'google',
+        weight: 500,
+      },
+    ],
+    VT323: [
+      {
+        name: 'VT323',
+        source: 'google',
         weight: 400,
       },
     ],
