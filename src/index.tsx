@@ -10,8 +10,6 @@ import { app as styleApp } from './frames/style.js';
 
 export const app = new Frog(FROG_APP_CONFIG);
 
-// 0x2105/0x1503bd5f6f082f7fbd36438cc416cd67849c0bec
-
 app.frame('/', c => {
   return c.res({
     image:

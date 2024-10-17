@@ -1,58 +1,95 @@
 import { Frog } from 'frog';
 import { devtools } from 'frog/dev';
 import { serveStatic } from 'frog/serve-static';
-import { request } from 'graphql-request';
+// import { request } from 'graphql-request';
 
-import { Row, Rows, Text } from '../components/ui.js';
-import { FROG_APP_CONFIG, GRAPH_URL } from '../utils/constants.js';
-import { GET_DAO } from '../utils/graph-queries.js';
-import { ErrorView } from '../components/ErrorView.js';
-import { nowInSeconds, parseContent } from '../utils/helpers.js';
-import { isChainId, isAddress } from '../utils/validators.js';
+import {
+  Box,
+  Row,
+  Rows,
+  Columns,
+  Column,
+  Heading,
+  Text,
+} from '../components/ui.js';
+import { FROG_APP_CONFIG } from '../utils/constants.js';
+// import { GET_DAO } from '../utils/graph-queries.js';
+// import { ErrorView } from '../components/ErrorView.js';
+// import { nowInSeconds, parseContent } from '../utils/helpers.js';
+// import { isChainId, isAddress } from '../utils/validators.js';
 
 export const app = new Frog(FROG_APP_CONFIG);
 
+// style/0x2105/0x1503bd5f6f082f7fbd36438cc416cd67849c0bec
+
 app.frame('/', c => {
+  const name = 'Big Boner DAO';
+  const memberCount = '11';
+  const vaultCount = '2';
+  const proposalCount = '69';
+
   return c.res({
-    image: <ErrorView message="Invalid Dao Params" />,
+    image: (
+      <Box
+        grow
+        alignVertical="center"
+        backgroundColor="raisinBlack"
+        padding="32"
+      >
+        <Rows>
+          <Row height="3/4">
+            <Columns grow>
+              <Column width="5/7" gap="16">
+                <Heading color="moonstone" size="32">
+                  {name}
+                </Heading>
+                <Text color="aliceBlue" size="24">
+                  Description
+                </Text>
+              </Column>
+              <Column width="2/7"></Column>
+            </Columns>
+          </Row>
+          <Row height="1/4">
+            <Columns>
+              <Column gap="16">
+                <Heading color="moonstone" size="20">
+                  Members
+                </Heading>
+                <Text color="aliceBlue" size="20">
+                  {memberCount}
+                </Text>
+              </Column>
+              <Column gap="16">
+                <Heading color="moonstone" size="20">
+                  Safes
+                </Heading>
+                <Text color="aliceBlue" size="20">
+                  {vaultCount}
+                </Text>
+              </Column>
+              <Column gap="16">
+                <Heading color="moonstone" size="20">
+                  Active Proposals
+                </Heading>
+                <Text color="aliceBlue" size="20">
+                  {proposalCount}
+                </Text>
+              </Column>
+            </Columns>
+          </Row>
+        </Rows>
+      </Box>
+    ),
     intents: [],
   });
 });
 
-app.frame('/:chainid/:daoid', async c => {
-  const chainid = c.req.param('chainid');
-  const daoid = c.req.param('daoid');
-
-  // @ts-ignore
-  const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
-  const url = chainid && GRAPH_URL(chainid, graphKey);
-
-  const validDaoid = isAddress(daoid);
-  const validChainid = isChainId(chainid);
-
-  if (!validDaoid || !validChainid || !url) {
-    return c.res({
-      image: <ErrorView message="Invalid Params" />,
-    });
-  }
-
-  const daoData = await request<any>(url, GET_DAO, {
-    daoid,
-    now: Math.floor(nowInSeconds()).toString(),
-  });
-
-  if (!daoData.dao) {
-    return c.res({
-      image: <ErrorView message="DAO Not Found" />,
-    });
-  }
-
-  const name = daoData.dao.name;
-  const vaultCount = daoData.dao.vaults.length || '0';
-  const proposalCount = daoData.dao.proposals.length || '0';
-  const memberCount = daoData.dao.activeMemberCount;
-  const profile =
-    daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
+app.frame('/style', async c => {
+  console.log('/style route accessed');
+  const name = 'Boner';
+  const vaultCount = '2';
+  const proposalCount = '69';
 
   return c.res({
     image: (
@@ -65,31 +102,9 @@ app.frame('/:chainid/:daoid', async c => {
           alignHorizontal="center"
           alignVertical="center"
         >
-          <Text size="24">Your Castle</Text>
-          <Text size="16">{daoid}</Text>
-          <Text size="16">on {chainid}</Text>
           <Text size="16">{name}</Text>
-          <Text size="16">member: {memberCount}</Text>
-          <Text size="16">active proposals: {proposalCount}</Text>
-          <Text size="16">vaults: {vaultCount}</Text>
-          {profile?.avatarImg ? (
-            <img
-              src={profile.avatarImg}
-              width="300px"
-              height="300px"
-              style={{ borderRadius: '50%' }}
-            />
-          ) : (
-            <div
-              style={{
-                display: 'flex',
-                width: '300px',
-                height: '300px',
-                borderRadius: '50%',
-                backgroundColor: '#341A34',
-              }}
-            />
-          )}
+          <Text size="16">Active Proposals: {proposalCount}</Text>
+          <Text size="16">Safes: {vaultCount}</Text>
         </Row>
       </Rows>
     ),
