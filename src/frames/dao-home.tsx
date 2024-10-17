@@ -23,6 +23,9 @@ app.frame("/:chainid/:daoid", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
 
+  console.log("c", c);
+  console.log("c", c?.url);
+
   // @ts-ignore
   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
   const url = chainid && GRAPH_URL(chainid, graphKey);
