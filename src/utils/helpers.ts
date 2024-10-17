@@ -28,6 +28,8 @@ export const parseContent = (content: string | undefined) => {
 
 export const truncateAddress = (addr: string) =>
   `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+export const truncateString = (string: string, length: number) =>
+  `${string.slice(0, length)}`;
 export const charLimit = (str: string | undefined, limit: number) =>
   str && str.length > limit ? `${str.slice(0, limit)}...` : str;
 export const fromWei = (amt: string): string => {
