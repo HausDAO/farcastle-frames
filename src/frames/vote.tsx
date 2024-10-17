@@ -7,13 +7,13 @@ import { Row, Rows, Text } from "../components/ui.js";
 import { FROG_APP_CONFIG, GRAPH_URL, TX_CHAIN_ID } from "../utils/constants.js";
 import { GET_PROPOSAL_VOTES } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
+import { SuccessView } from "../components/SuccessView.js";
 import { isChainId, isAddress, isNumberish } from "../utils/validators.js";
 import {
   getProposalStatus,
   PROPOSAL_STATUS,
 } from "../utils/proposals-status.js";
 import { fromWei } from "../utils/helpers.js";
-import { SuccessView } from "../components/SuccessView.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
@@ -24,7 +24,7 @@ app.frame("/", (c) => {
   });
 });
 
-// 0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b/proposal/2
+// /proposal/0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b/4
 
 app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
   const chainid = c.req.param("chainid");
@@ -61,6 +61,8 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
   // // show button if not
   // else
   // //  display based on status
+
+  // success view not working
 
   if (!proposal) {
     return c.res({
@@ -140,29 +142,12 @@ app.transaction("/tx/:chainid/:daoid/:proposalid/:approved", (c) => {
 });
 
 app.frame("/success", (c) => {
+  console.log("yolo");
   return c.res({
     image: <SuccessView message="Your Vote Counted" />,
-    // intents: [<Button action={`/vote/${chainid}/${daoid}/${proposalid}`}>Votes</Button>],
     intents: [],
   });
 });
-
-// app.frame(`/success/:daoid`, c => {
-//   const daoid = c.req.param('daoid');
-//   return c.res({
-//     image: '/success.c725c72095.png',
-//     headers: {
-//       'Content-Type': 'image/png',
-//     },
-//     intents: [
-//       <Button.Link
-//         href={`https://app.yeet.haus/#/molochV3/0x2105/${daoid.toLowerCase()}`}
-//       >
-//         View Project
-//       </Button.Link>,
-//     ],
-//   });
-// });
 
 const isCloudflareWorker = typeof caches !== "undefined";
 if (isCloudflareWorker) {
