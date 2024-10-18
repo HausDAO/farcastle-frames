@@ -27,6 +27,13 @@ export const formatDaoDescription = (description?: string) => {
   if (!description) return "-";
   const normal = normalizeCharacters(description);
   return normal.length > 125
-    ? truncateString(normalizeCharacters(description), 125)
+    ? truncateString(normalizeCharacters(description), 120)
     : normal;
+};
+export const formatDaoImg = (imgPath?: string) => {
+  if (!imgPath) return;
+  if (!/^https?:\/\//i.test(imgPath)) {
+    return "https://" + imgPath;
+  }
+  return imgPath;
 };

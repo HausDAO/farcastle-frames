@@ -11,6 +11,7 @@ import { isChainId, isAddress } from "../utils/validators.js";
 import { DaoView } from "../components/DaoView.js";
 import {
   formatDaoDescription,
+  formatDaoImg,
   formatDaoName,
 } from "../utils/dao-data-formatters.js";
 
@@ -58,6 +59,7 @@ app.frame("/:chainid/:daoid", async (c) => {
   const profile =
     daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
   const description = formatDaoDescription(profile?.description);
+  const daoImg = formatDaoImg(profile?.avatarImg);
 
   return c.res({
     image: (
@@ -67,7 +69,8 @@ app.frame("/:chainid/:daoid", async (c) => {
         memberCount={memberCount}
         vaultCount={vaultCount}
         proposalCount={proposalCount}
-        img={profile?.avatarImg}
+        // img={profile?.avatarImg}
+        img={daoImg}
       />
     ),
     intents: [],
