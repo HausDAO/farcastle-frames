@@ -13,6 +13,7 @@ import {
 } from "../utils/helpers.js";
 import { isChainId, isAddress } from "../utils/validators.js";
 import { DaoView } from "../components/DaoView.js";
+import { formatDaoDescription } from "../utils/dao-data-formatters.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
@@ -57,12 +58,7 @@ app.frame("/:chainid/:daoid", async (c) => {
   const memberCount = daoData.dao.activeMemberCount;
   const profile =
     daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
-  let description = "-";
-  if (profile && profile.description !== "") {
-    description = normalizeCharacters(profile.description);
-  }
-
-  // console.log("profile", profile);
+  const description = formatDaoDescription(profile?.description);
 
   return c.res({
     image: (
