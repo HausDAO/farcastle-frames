@@ -6,14 +6,13 @@ import { request } from "graphql-request";
 import { FROG_APP_CONFIG, GRAPH_URL } from "../utils/constants.js";
 import { GET_DAO } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
-import {
-  normalizeCharacters,
-  nowInSeconds,
-  parseContent,
-} from "../utils/helpers.js";
+import { nowInSeconds, parseContent } from "../utils/helpers.js";
 import { isChainId, isAddress } from "../utils/validators.js";
 import { DaoView } from "../components/DaoView.js";
-import { formatDaoDescription } from "../utils/dao-data-formatters.js";
+import {
+  formatDaoDescription,
+  formatDaoName,
+} from "../utils/dao-data-formatters.js";
 
 export const app = new Frog(FROG_APP_CONFIG);
 
@@ -52,7 +51,7 @@ app.frame("/:chainid/:daoid", async (c) => {
     });
   }
 
-  const name = normalizeCharacters(daoData.dao.name);
+  const name = formatDaoName(daoData.dao.name);
   const vaultCount = daoData.dao.vaults.length || "0";
   const proposalCount = daoData.dao.proposals.length || "0";
   const memberCount = daoData.dao.activeMemberCount;

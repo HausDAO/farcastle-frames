@@ -20,7 +20,7 @@ export const truncateString = (string: string, length: number) =>
   `${string.slice(0, length)} ...`;
 
 export const formatDaoName = (name?: string) => {
-  if (!name) return "-";
+  if (!name) return "A DAO with no name";
   return normalizeCharacters(name);
 };
 export const formatDaoDescription = (description?: string) => {
