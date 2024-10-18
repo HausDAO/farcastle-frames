@@ -1,4 +1,4 @@
-import { Frog } from "frog";
+import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { request } from "graphql-request";
@@ -61,6 +61,15 @@ app.frame("/:chainid/:daoid", async (c) => {
   const description = formatDaoDescription(profile?.description);
   const daoImg = formatDaoImg(profile?.avatarImg);
 
+  const intents =
+    Number(proposalCount) > 0
+      ? [
+          <Button action={`/proposals/${chainid}/${daoid}/0`}>
+            Active Proposals
+          </Button>,
+        ]
+      : [];
+
   return c.res({
     image: (
       <DaoView
@@ -73,7 +82,7 @@ app.frame("/:chainid/:daoid", async (c) => {
         img={daoImg}
       />
     ),
-    intents: [],
+    intents,
   });
 });
 

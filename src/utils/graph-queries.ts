@@ -30,6 +30,27 @@ export const GET_DAO = gql`
   }
 `;
 
+export const GET_PROPOSALS = gql`
+  query proposals($daoid: String!, $skip: Int!, $now: String!) {
+    proposals(
+      first: 3
+      skip: $skip
+      orderBy: createdAt
+      orderDirection: desc
+      where: {
+        dao: $daoid
+        sponsored: true
+        cancelled: false
+        graceEnds_gt: $now
+      }
+    ) {
+      id
+      createdAt
+      proposalId
+    }
+  }
+`;
+
 export const GET_PROPOSAL = gql`
   query proposal($daoid: String!, $proposalid: String!) {
     proposals(where: { proposalId: $proposalid, dao: $daoid }) {

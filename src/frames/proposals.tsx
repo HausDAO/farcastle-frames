@@ -3,13 +3,18 @@ import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { request } from "graphql-request";
 
-import { Row, Rows, Text } from "../components/ui.js";
+import { Row, Rows, Text, VStack } from "../components/ui.js";
 import { FROG_APP_CONFIG, GRAPH_URL } from "../utils/constants.js";
-import { GET_PROPOSAL } from "../utils/graph-queries.js";
+import { GET_PROPOSALS } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
 import { isChainId, isAddress, isNumberish } from "../utils/validators.js";
+import { nowInSeconds } from "../utils/helpers.js";
+
+const PER_PAGE = 2;
 
 export const app = new Frog(FROG_APP_CONFIG);
+
+// proposals/0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b/0
 
 app.frame("/", (c) => {
   return c.res({
@@ -18,10 +23,10 @@ app.frame("/", (c) => {
   });
 });
 
-app.frame("/:chainid/:daoid/:proposalid", async (c) => {
+app.frame("/:chainid/:daoid/:page", async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
-  const proposalid = c.req.param("proposalid");
+  const page = c.req.param("page");
 
   // @ts-ignore
   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
@@ -29,28 +34,57 @@ app.frame("/:chainid/:daoid/:proposalid", async (c) => {
 
   const validDaoid = isAddress(daoid);
   const validChainid = isChainId(chainid);
-  const validProposalid = isNumberish(proposalid);
+  const validPage = isNumberish(page);
 
-  if (!validDaoid || !validChainid || !validProposalid || !url) {
+  if (!validDaoid || !validChainid || !validPage || !url) {
     return c.res({
       image: <ErrorView message="Invalid Params" />,
     });
   }
 
-  const proposalData = await request<any>(url, GET_PROPOSAL, {
+  const skip = Number(page) * PER_PAGE;
+
+  const proposalData = await request<any>(url, GET_PROPOSALS, {
     daoid,
-    proposalid,
+    now: Math.floor(nowInSeconds()).toString(),
+    skip,
   });
 
-  const proposal = proposalData.proposals[0];
+  console.log("proposalData", proposalData);
 
-  if (!proposal) {
+  const proposals = proposalData.proposals;
+
+  if (!proposals.length) {
     return c.res({
-      image: <ErrorView message="Proposal Not Found" />,
+      image: <ErrorView message="Proposals Not Found" />,
     });
   }
 
-  const createdAt = proposal.createdAt;
+  const hasNext = proposals.length > PER_PAGE;
+  const hasPrevious = Number(page) > 0;
+
+  const viewProposals =
+    proposals.length != 1
+      ? proposals.slice(0, proposals.length - 1)
+      : proposals;
+
+  const propList = viewProposals.map((prop: { proposalId: string }) => {
+    return <Text size="18">ProposalId {prop.proposalId}</Text>;
+  });
+
+  let intents = [];
+  if (hasPrevious) {
+    intents.push(
+      <Button action={`/${chainid}/${daoid}/${Number(page) - 1}`}>
+        Previous
+      </Button>
+    );
+  }
+  if (hasNext) {
+    intents.push(
+      <Button action={`/${chainid}/${daoid}/${page + 1}`}>Next</Button>
+    );
+  }
 
   return c.res({
     image: (
@@ -63,16 +97,12 @@ app.frame("/:chainid/:daoid/:proposalid", async (c) => {
           alignHorizontal="center"
           alignVertical="center"
         >
-          <Text size="24">Proposal {proposalid}</Text>
-          <Text size="16">{daoid}</Text>
-          <Text size="16">on {chainid}</Text>
-          <Text size="16">at {createdAt}</Text>
+          <Text size="24">Proposal page: {Number(page) + 1}</Text>
+          <VStack gap="2">{propList}</VStack>
         </Row>
       </Rows>
     ),
-    intents: [
-      <Button action={`/vote/${chainid}/${daoid}/${proposalid}`}>Votes</Button>,
-    ],
+    intents,
   });
 });
 
