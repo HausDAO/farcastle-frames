@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const normalizeCharacters = (string: string): string => {
   let r = string;
 
@@ -36,4 +38,47 @@ export const formatDaoImg = (imgPath?: string) => {
     return "https://" + imgPath;
   }
   return imgPath;
+};
+export const formatProposalTitle = (title?: string) => {
+  if (!title) return "A Proposal with no name";
+  return normalizeCharacters(title);
+};
+
+export const PROPOSAL_TYPE_LABELS: Record<string, string> = {
+  SIGNAL: "Signal Proposal",
+  ISSUE: "Token Proposal",
+  ADD_SHAMAN: "Shaman Proposal",
+  TRANSFER_ERC20: "Funding Proposal",
+  TRANSFER_NETWORK_TOKEN: "Funding Proposal",
+  UPDATE_GOV_SETTINGS: "Governance Proposal",
+  TOKEN_SETTINGS: "Token Proposal",
+  TOKENS_FOR_SHARES: "Token Proposal",
+  GUILDKICK: "Token Proposal",
+  WALLETCONNECT: "WalletConnect Proposal",
+  MULTICALL: "Multicall Proposal",
+  ADD_SIGNER: "Add Safe Signer Proposal",
+};
+export const getProposalTypeLabel = (
+  proposalType: string,
+  proposalTypes: Record<string, string> = PROPOSAL_TYPE_LABELS
+) => proposalTypes?.[proposalType] || "Unknown Proposal Type";
+
+export const formatDateTimeFromSeconds = (
+  seconds: string | undefined
+): string | undefined => {
+  if (!seconds) {
+    return;
+  }
+
+  return format(new Date(Number(seconds) * 1000), "h:mm aaa MMMM do y");
+};
+
+export const formatShortDateTimeFromSeconds = (
+  seconds: string | undefined
+): string | undefined => {
+  if (!seconds) {
+    return;
+  }
+
+  return format(new Date(Number(seconds) * 1000), "MMM do, p");
 };

@@ -1,9 +1,7 @@
-import { Frog } from "frog";
-import { devtools } from "frog/dev";
-import { serveStatic } from "frog/serve-static";
+import { Button } from "frog";
 import { request } from "graphql-request";
 
-import { FROG_APP_CONFIG, GRAPH_URL } from "../utils/constants.js";
+import { GRAPH_URL } from "../utils/constants.js";
 import { GET_DAO } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
 import { nowInSeconds, parseContent } from "../utils/helpers.js";
@@ -15,16 +13,10 @@ import {
   formatDaoName,
 } from "../utils/dao-data-formatters.js";
 
-export const app = new Frog(FROG_APP_CONFIG);
+// 0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b
 
-app.frame("/", (c) => {
-  return c.res({
-    image: <ErrorView message="Invalid Dao Params" />,
-    intents: [],
-  });
-});
-
-app.frame("/:chainid/:daoid", async (c) => {
+// @ts-ignore
+export const daoHomeFrame = async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
 
@@ -61,6 +53,24 @@ app.frame("/:chainid/:daoid", async (c) => {
   const description = formatDaoDescription(profile?.description);
   const daoImg = formatDaoImg(profile?.avatarImg);
 
+  const nextProposalId =
+    Number(proposalCount) && Number(daoData.dao.proposals[0].proposalId);
+
+  const proposalIds =
+    nextProposalId &&
+    daoData.dao.proposals.map((p: { proposalId: string }) => p.proposalId);
+
+  const intents =
+    nextProposalId > 0
+      ? [
+          <Button
+            action={`/proposal/${chainid}/${daoid}/${proposalIds.join(",")}`}
+          >
+            Latest Active Proposal
+          </Button>,
+        ]
+      : [];
+
   return c.res({
     image: (
       <DaoView
@@ -69,23 +79,9 @@ app.frame("/:chainid/:daoid", async (c) => {
         memberCount={memberCount}
         vaultCount={vaultCount}
         proposalCount={proposalCount}
-        // img={profile?.avatarImg}
         img={daoImg}
       />
     ),
-    intents: [],
+    intents,
   });
-});
-
-const isCloudflareWorker = typeof caches !== "undefined";
-if (isCloudflareWorker) {
-  // @ts-ignore
-  const manifest = await import("__STATIC_CONTENT_MANIFEST");
-  const serveStaticOptions = { manifest, root: "./" };
-  app.use("/*", serveStatic(serveStaticOptions));
-  devtools(app, { assetsPath: "/", serveStatic, serveStaticOptions });
-} else {
-  devtools(app, { serveStatic });
-}
-
-export default app;
+};
