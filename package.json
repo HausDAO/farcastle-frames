@@ -9,6 +9,7 @@
     "wrangler:static": "cp -r ./node_modules/frog/_lib/ui/.frog ./public/frog"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "frog": "latest",
     "graphql-request": "^7.1.0",

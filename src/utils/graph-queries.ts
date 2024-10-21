@@ -17,6 +17,10 @@ export const GET_DAO = gql`
         where: { cancelled: false, sponsored: true, graceEnds_gt: $now }
       ) {
         id
+        proposalId
+        proposalType
+        title
+        description
       }
       profile: records(
         first: 1
@@ -30,11 +34,38 @@ export const GET_DAO = gql`
   }
 `;
 
+export const GET_PROPOSALS = gql`
+  query proposals($daoid: String!, $skip: Int!, $now: String!) {
+    proposals(
+      first: 3
+      skip: $skip
+      orderBy: createdAt
+      orderDirection: desc
+      where: {
+        dao: $daoid
+        sponsored: true
+        cancelled: false
+        graceEnds_gt: $now
+      }
+    ) {
+      id
+      createdAt
+      proposalId
+    }
+  }
+`;
+
 export const GET_PROPOSAL = gql`
   query proposal($daoid: String!, $proposalid: String!) {
     proposals(where: { proposalId: $proposalid, dao: $daoid }) {
-      id
       createdAt
+      proposalId
+      proposalType
+      title
+      description
+      graceEnds
+      votingEnds
+      proposedBy
     }
   }
 `;
@@ -44,6 +75,8 @@ export const GET_PROPOSAL_VOTES = gql`
     proposals(where: { proposalId: $proposalid, dao: $daoid }) {
       id
       createdAt
+      title
+      proposalType
       sponsored
       cancelled
       passed
