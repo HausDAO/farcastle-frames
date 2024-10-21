@@ -15,6 +15,7 @@ const PER_PAGE = 2;
 export const app = new Frog(FROG_APP_CONFIG);
 
 // proposals/0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b/0
+// spike on a proposal list w/ pagination
 
 app.frame("/", (c) => {
   return c.res({
@@ -85,7 +86,6 @@ app.frame("/:chainid/:daoid/:page", async (c) => {
       <Button action={`/${chainid}/${daoid}/${page + 1}`}>Next</Button>
     );
   }
-
   return c.res({
     image: (
       <Rows grow>

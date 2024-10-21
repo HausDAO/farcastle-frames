@@ -1,13 +1,10 @@
-import { Button, FrameIntent, Frog } from "frog";
-import { devtools } from "frog/dev";
-import { serveStatic } from "frog/serve-static";
+import { Button, FrameIntent } from "frog";
 import { request } from "graphql-request";
 
 import { Row, Rows, Text } from "../components/ui.js";
-import { FROG_APP_CONFIG, GRAPH_URL, TX_CHAIN_ID } from "../utils/constants.js";
+import { GRAPH_URL, TX_CHAIN_ID } from "../utils/constants.js";
 import { GET_PROPOSAL_VOTES } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
-import { SuccessView } from "../components/SuccessView.js";
 import { isChainId, isAddress, isNumberish } from "../utils/validators.js";
 import {
   getProposalStatus,
@@ -15,18 +12,8 @@ import {
 } from "../utils/proposals-status.js";
 import { fromWei } from "../utils/helpers.js";
 
-export const app = new Frog(FROG_APP_CONFIG);
-
-app.frame("/", (c) => {
-  return c.res({
-    image: <ErrorView message="Invalid Proposal Params" />,
-    intents: [],
-  });
-});
-
-// /proposal/0x2105/0x43188a21e27482a7a1a13b1022b4e4050a981f5b/4
-
-app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
+// @ts-ignore
+export const voteFrame = async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
   const proposalid = c.req.param("proposalid");
@@ -77,7 +64,11 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
   console.log("status", status);
   console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
 
-  let intents: FrameIntent | FrameIntent[] = [];
+  let intents: FrameIntent | FrameIntent[] = [
+    <Button action={`/proposal/${chainid}/${daoid}/${proposalid}`}>
+      Proposal
+    </Button>,
+  ];
   if (status === PROPOSAL_STATUS.voting) {
     intents = [
       <Button.Transaction target={`/tx/${chainid}/${daoid}/${proposalid}/true`}>
@@ -88,16 +79,17 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
       >
         No
       </Button.Transaction>,
+      ...intents,
     ];
   }
 
   return c.res({
-    action: "/success",
+    action: "/success/vote",
     image: (
       <Rows grow>
         <Row
           backgroundColor="darkPurple"
-          color="white"
+          color="moonstone"
           textAlign="center"
           textTransform="uppercase"
           alignHorizontal="center"
@@ -112,9 +104,10 @@ app.frame("/:chainid/:daoid/:proposalid/", async (c) => {
     ),
     intents,
   });
-});
+};
 
-app.transaction("/tx/:chainid/:daoid/:proposalid/:approved", (c) => {
+// @ts-ignore
+export const voteTransaction = (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
   const proposalid = c.req.param("proposalid");
@@ -139,25 +132,4 @@ app.transaction("/tx/:chainid/:daoid/:proposalid/:approved", (c) => {
     args: [Number(proposalid), approved === "true"],
     to: daoid as `0x${string}`,
   });
-});
-
-app.frame("/success", (c) => {
-  console.log("yolo");
-  return c.res({
-    image: <SuccessView message="Your Vote Counted" />,
-    intents: [],
-  });
-});
-
-const isCloudflareWorker = typeof caches !== "undefined";
-if (isCloudflareWorker) {
-  // @ts-ignore
-  const manifest = await import("__STATIC_CONTENT_MANIFEST");
-  const serveStaticOptions = { manifest, root: "./" };
-  app.use("/*", serveStatic(serveStaticOptions));
-  devtools(app, { assetsPath: "/", serveStatic, serveStaticOptions });
-} else {
-  devtools(app, { serveStatic });
-}
-
-export default app;
+};

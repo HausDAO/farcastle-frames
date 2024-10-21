@@ -2,23 +2,32 @@
 import { Rows, Row } from "./ui.js";
 import { Text } from "./ui.js";
 
-interface ErrorViewProps {
-  message: string;
+interface SuccessViewProps {
+  // 'vote' or 'custom'
+  type: string;
+  message?: string;
 }
 
-export function SuccessView({ message }: ErrorViewProps) {
+const messages: {
+  [key: string]: string;
+} = {
+  vote: "Your Vote Counts!",
+};
+
+export function SuccessView({ type, message }: SuccessViewProps) {
+  const bodyText = message || messages[type];
   return (
     <Rows grow>
       <Row
         backgroundColor="darkPurple"
-        color="white"
+        color="moonstone"
         textAlign="center"
         textTransform="uppercase"
         alignHorizontal="center"
         alignVertical="center"
       >
         <Text size="48">You Win</Text>
-        <Text size="32">{message}</Text>
+        <Text size="32">{bodyText}</Text>
       </Row>
     </Rows>
   );

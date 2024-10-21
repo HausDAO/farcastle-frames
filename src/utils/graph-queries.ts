@@ -17,6 +17,10 @@ export const GET_DAO = gql`
         where: { cancelled: false, sponsored: true, graceEnds_gt: $now }
       ) {
         id
+        proposalId
+        proposalType
+        title
+        description
       }
       profile: records(
         first: 1
@@ -54,8 +58,14 @@ export const GET_PROPOSALS = gql`
 export const GET_PROPOSAL = gql`
   query proposal($daoid: String!, $proposalid: String!) {
     proposals(where: { proposalId: $proposalid, dao: $daoid }) {
-      id
       createdAt
+      proposalId
+      proposalType
+      title
+      description
+      graceEnds
+      votingEnds
+      proposedBy
     }
   }
 `;
