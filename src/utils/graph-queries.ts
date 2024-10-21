@@ -75,6 +75,8 @@ export const GET_PROPOSAL_VOTES = gql`
     proposals(where: { proposalId: $proposalid, dao: $daoid }) {
       id
       createdAt
+      title
+      proposalType
       sponsored
       cancelled
       passed

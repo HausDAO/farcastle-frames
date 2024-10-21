@@ -15,11 +15,6 @@ app.frame("/", (c) => {
   return c.res({
     image:
       "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
-    intents: [
-      // <Button.Link href="https://warpcast.com/~/channel/farcastle/join">
-      //   Join Channel
-      // </Button.Link>,
-    ],
   });
 });
 
@@ -43,7 +38,6 @@ app.frame("/success/:type", (c) => {
   const type = c.req.param("type");
   return c.res({
     image: <SuccessView type={type} />,
-    intents: [],
   });
 });
 
