@@ -19,6 +19,14 @@ app.frame("/", (c) => {
   });
 });
 
+app.frame("/home", (c) => {
+  return c.res({
+    image:
+      "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
+    intents: [],
+  });
+});
+
 app.frame("dao/:chainid/:daoid", async (c) => {
   return daoHomeFrame(c);
 });
