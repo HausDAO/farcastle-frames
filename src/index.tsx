@@ -15,6 +15,7 @@ app.frame("/", (c) => {
   return c.res({
     image:
       "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
+    intents: [],
   });
 });
 
@@ -25,7 +26,6 @@ app.frame("dao/:chainid/:daoid", async (c) => {
 app.frame("proposal/:chainid/:daoid/:proposalids", async (c) => {
   return proposalFrame(c);
 });
-
 app.frame("vote/:chainid/:daoid/:proposalid", async (c) => {
   return voteFrame(c);
 });
