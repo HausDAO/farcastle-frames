@@ -15,6 +15,7 @@ import {
   formatProposalTitle,
   formatShortDateTimeFromSeconds,
   getProposalTypeLabel,
+  voteCount,
 } from "../utils/dao-data-formatters.js";
 
 // TODO: find out of user is a member
@@ -56,8 +57,8 @@ export const voteFrame = async (c) => {
   }
 
   const status = getProposalStatus(proposal);
-  const yes = fromWei(proposal.yesBalance);
-  const no = fromWei(proposal.noBalance);
+  const yes = voteCount(proposal.yesBalance);
+  const no = voteCount(proposal.noBalance);
   const title = formatProposalTitle(proposal.title);
   const createdAt = formatShortDateTimeFromSeconds(proposal.createdAt);
   const proposalType = getProposalTypeLabel(proposal.proposalType);
@@ -106,7 +107,6 @@ export const voteTransaction = (c) => {
   const daoid = c.req.param("daoid");
   const proposalid = c.req.param("proposalid");
   const approved = c.req.param("approved");
-  console.log('approved === "true"', approved === "true");
 
   return c.contract({
     abi: [
