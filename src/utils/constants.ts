@@ -36,11 +36,14 @@ export const TX_CHAIN_ID: {
 };
 
 export const isCloudflareWorker = typeof caches !== "undefined";
+
+const origin = isCloudflareWorker ? "https://frames.farcastle.net" : "";
+console.log("origin", origin);
+
 export const FROG_APP_CONFIG = {
   title: "Farcastle",
   browserLocation: "https://farcastle.net",
-  // origin: "https://frames.farcastle.net",
-  origin: isCloudflareWorker ? "https://frames.farcastle.net" : "",
+  origin,
   assetsPath: "/",
   basePath: "/",
   headers: {

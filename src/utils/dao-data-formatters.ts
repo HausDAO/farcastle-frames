@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { fromWei } from "./helpers";
 
 export const normalizeCharacters = (string: string): string => {
   let r = string;
@@ -81,4 +82,13 @@ export const formatShortDateTimeFromSeconds = (
   }
 
   return format(new Date(Number(seconds) * 1000), "MMM do, p");
+};
+
+export const voteCount = (amt: string): string => {
+  // export const fromWei = (amt: string): string => {
+  //   return formatEther(BigInt(amt)).toString();
+  // };
+  const num = Number(fromWei(amt));
+
+  return num.toFixed(2).toString();
 };
