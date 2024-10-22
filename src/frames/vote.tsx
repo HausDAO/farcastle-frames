@@ -9,7 +9,6 @@ import {
   getProposalStatus,
   PROPOSAL_STATUS,
 } from "../utils/proposals-status.js";
-import { fromWei } from "../utils/helpers.js";
 import { VoteView } from "../components/VoteView.js";
 import {
   formatProposalTitle,
