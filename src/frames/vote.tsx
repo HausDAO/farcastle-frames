@@ -47,7 +47,7 @@ export const voteFrame = async (c) => {
 
   const proposal = proposalData.proposals[0];
 
-  console.log("proposal", proposal);
+  // console.log("proposal", proposal);
 
   if (!proposal) {
     return c.res({
@@ -63,7 +63,7 @@ export const voteFrame = async (c) => {
   const proposalType = getProposalTypeLabel(proposal.proposalType);
 
   console.log("status", status);
-  console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
+  // console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
 
   let intents: FrameIntent | FrameIntent[] = [
     <Button action={`/proposal/${chainid}/${daoid}/${proposalid}`}>
