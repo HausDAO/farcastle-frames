@@ -9,18 +9,14 @@ bucket = "./public"
 [observability]
 enabled = true
 
-# [vars]
-# MY_VARIABLE = "production_value"
+[vars]
+ORIGIN = "https://frames.farcastle.net"
 
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[env.staging]
+name = "farcastle-frames-staging"
 
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
+[env.staging.vars]
+ORIGIN = "https://farcastle-frames-staging.earth2travis.workers.dev"
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = ""
+
+
