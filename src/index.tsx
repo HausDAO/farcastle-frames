@@ -15,15 +15,6 @@ app.frame("/", (c) => {
   return c.res({
     image:
       "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
-    intents: [],
-  });
-});
-
-app.frame("/home", (c) => {
-  return c.res({
-    image:
-      "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
-    intents: [],
   });
 });
 
