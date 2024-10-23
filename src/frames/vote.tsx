@@ -72,7 +72,9 @@ export const voteFrame = async (c) => {
   ];
   if (status === PROPOSAL_STATUS.voting) {
     intents = [
-      <Button.Transaction target={`/tx/${chainid}/${daoid}/${proposalid}/true`}>
+      <Button.Transaction
+        target={`/tx/vote/${chainid}/${daoid}/${proposalid}/true`}
+      >
         Yes
       </Button.Transaction>,
       <Button.Transaction

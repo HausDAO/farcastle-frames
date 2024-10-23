@@ -12,6 +12,7 @@ const messages: {
   [key: string]: string;
 } = {
   vote: "Your Vote Counts!",
+  execute: "The Proposal has been executed!",
 };
 
 export function SuccessView({ type, message }: SuccessViewProps) {

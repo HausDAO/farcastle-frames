@@ -4,7 +4,7 @@ import { serveStatic } from "frog/serve-static";
 import { FROG_APP_CONFIG } from "./utils/constants.js";
 
 import { daoHomeFrame } from "./frames/dao-home.js";
-import { proposalFrame } from "./frames/proposal.js";
+import { executeTransaction, proposalFrame } from "./frames/proposal.js";
 import { voteFrame, voteTransaction } from "./frames/vote.js";
 import { app as styleApp } from "./frames/style.js";
 import { SuccessView } from "./components/SuccessView.js";
@@ -29,8 +29,12 @@ app.frame("vote/:chainid/:daoid/:proposalid", async (c) => {
   return voteFrame(c);
 });
 
-app.transaction("/tx/:chainid/:daoid/:proposalid/:approved", (c) => {
+app.transaction("tx/vote/:chainid/:daoid/:proposalid/:approved", (c) => {
   return voteTransaction(c);
+});
+
+app.transaction("tx/execute/:chainid/:daoid/:proposalid", (c) => {
+  return executeTransaction(c);
 });
 
 app.frame("/success/:type", (c) => {
