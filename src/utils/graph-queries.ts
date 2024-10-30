@@ -7,6 +7,7 @@ export const GET_DAO = gql`
       createdAt
       name
       activeMemberCount
+      proposalCount
       vaults(where: { active: true }) {
         id
       }

@@ -22,6 +22,9 @@ app.frame("dao/:chainid/:daoid", async (c) => {
   return daoHomeFrame(c);
 });
 
+app.frame("proposals/:chainid/:daoid/", async (c) => {
+  return proposalFrame(c);
+});
 app.frame("proposal/:chainid/:daoid/:proposalids", async (c) => {
   return proposalFrame(c);
 });

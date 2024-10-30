@@ -33,6 +33,14 @@ export const formatDaoDescription = (description?: string) => {
     ? truncateString(normalizeCharacters(description), 120)
     : normal;
 };
+
+export const formatProposalDescription = (description?: string) => {
+  if (!description) return "-";
+  const normal = normalizeCharacters(description);
+  return normal.length > 150
+    ? truncateString(normalizeCharacters(description), 145)
+    : normal;
+};
 export const formatDaoImg = (imgPath?: string) => {
   if (!imgPath) return;
   if (!/^https?:\/\//i.test(imgPath)) {
@@ -42,7 +50,7 @@ export const formatDaoImg = (imgPath?: string) => {
 };
 export const formatProposalTitle = (title?: string) => {
   if (!title) return "A Proposal with no name";
-  return normalizeCharacters(title);
+  return truncateString(normalizeCharacters(title), 25);
 };
 
 export const PROPOSAL_TYPE_LABELS: Record<string, string> = {

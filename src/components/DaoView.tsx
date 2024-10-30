@@ -63,7 +63,7 @@ export function DaoView({
             </Column>
             <Column width="2/4" gap="16">
               <Heading font="VT323" color="moonstone" size="32">
-                Active Proposals
+                Proposals
               </Heading>
               <Text color="aliceBlue" size="24">
                 {proposalCount}

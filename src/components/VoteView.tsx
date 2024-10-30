@@ -3,7 +3,6 @@ import { Text } from "./ui.js";
 
 interface VoteViewProps {
   proposalid: string | number;
-  createdAt?: string;
   proposalType: string;
   name: string;
   yes?: string;
@@ -12,7 +11,6 @@ interface VoteViewProps {
 
 export function VoteView({
   proposalid,
-  createdAt,
   proposalType,
   name,
   yes,
@@ -23,7 +21,7 @@ export function VoteView({
       <Rows>
         <Row height="3/6">
           <Text color="aliceBlue" size="18">
-            {`${proposalid} | ${proposalType} | ${createdAt}`}
+            {`${proposalid} | ${proposalType}`}
           </Text>
           <Spacer size="12" />
 
