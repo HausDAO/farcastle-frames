@@ -10,6 +10,10 @@ export const GRAPH_URL = (chainId: string, graphKey: string) => {
   const urls: KEYCHAIN = {
     "0xa": `https://gateway-arbitrum.network.thegraph.com/api/${graphKey}/subgraphs/id/CgH5vtz9CJPdcSmD3XEh8fCVDjQjnRwrSawg71T1ySXW`,
     "0x2105": `https://gateway-arbitrum.network.thegraph.com/api/${graphKey}/subgraphs/id/7yh4eHJ4qpHEiLPAk9BXhL5YgYrTrRE6gWy8x4oHyAqW`,
+    "0x1": `https://gateway-arbitrum.network.thegraph.com/api/${graphKey}/subgraphs/id/HouDe2pTdyKM9CTG1aodnPPPhm7U148BCH7eJ4HHwpdQ`,
+    "0x64": `https://gateway-arbitrum.network.thegraph.com/api/${graphKey}/subgraphs/id/6x9FK3iuhVFaH9sZ39m8bKB5eckax8sjxooBPNKWWK8r`,
+    "0xa4b1": `https://gateway-arbitrum.network.thegraph.com/api/${graphKey}/subgraphs/id/GPACxuMWrrPSEJpFqupnePJNMfuArpFabrXLnWvXU2bp`,
+    "0x89": `https://gateway-arbitrum.network.thegraph.com/api/${graphKey}/subgraphs/id/A4su27JYXR5TkPZmiFHzzqMJnmYttfU3FyrdNBDnnu8T`,
   };
   return urls[chainId];
 };
@@ -33,6 +37,10 @@ export const TX_CHAIN_ID: {
 } = {
   "0xa": "eip155:10",
   "0x2105": "eip155:8453",
+  "0x1": "eip155:1",
+  "0x64": "eip155:100",
+  "0xa4b1": "eip155:42161",
+  "0x89": "eip155:137",
 };
 
 export const isCloudflareWorker = typeof caches !== "undefined";

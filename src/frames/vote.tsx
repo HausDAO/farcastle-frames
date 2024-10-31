@@ -16,14 +16,13 @@ import {
   voteCount,
 } from "../utils/dao-data-formatters.js";
 
-// TODO: find out of user is a member
-// intents based on in voting
-
 // @ts-ignore
 export const voteFrame = async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
-  const proposalid = c.req.param("proposalid");
+  const proposalids = c.req.param("proposalids");
+  const idArr = proposalids.split("_");
+  const proposalid = idArr[0];
 
   // @ts-ignore
   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
@@ -61,7 +60,13 @@ export const voteFrame = async (c) => {
   const proposalType = getProposalTypeLabel(proposal.proposalType);
 
   console.log("status", status);
-  // console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
+  let statusText: string = status;
+  if (status === PROPOSAL_STATUS.voting) {
+    statusText = "Voting open until";
+  }
+  if (status === PROPOSAL_STATUS.grace) {
+    statusText = "In grace period until";
+  }
 
   let intents: FrameIntent | FrameIntent[] = [
     <Button.Link
@@ -69,7 +74,7 @@ export const voteFrame = async (c) => {
     >
       Details
     </Button.Link>,
-    <Button action={`/molochv3/${chainid}/${daoid}/proposals/${proposalid}`}>
+    <Button action={`/molochv3/${chainid}/${daoid}/proposals/${proposalids}`}>
       Back
     </Button>,
   ];
@@ -108,6 +113,8 @@ export const voteFrame = async (c) => {
         no={no}
         name={title}
         proposalType={proposalType}
+        status={statusText}
+        executable={status === PROPOSAL_STATUS.needsProcessing}
       />
     ),
     intents,

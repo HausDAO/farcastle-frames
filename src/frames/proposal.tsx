@@ -16,18 +16,14 @@ import {
   formatShortDateTimeFromSeconds,
   getProposalTypeLabel,
 } from "../utils/dao-data-formatters.js";
-import { nowInSeconds, truncateAddress } from "../utils/helpers.js";
-import {
-  getProposalStatus,
-  PROPOSAL_STATUS,
-} from "../utils/proposals-status.js";
+import { truncateAddress } from "../utils/helpers.js";
 
 // @ts-ignore
 export const proposalFrame = async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
   const proposalids = c.req.param("proposalids");
-  const idArr = proposalids.split(",");
+  const idArr = proposalids.split("_");
   const proposalid = idArr[0];
 
   // @ts-ignore
@@ -63,39 +59,52 @@ export const proposalFrame = async (c) => {
   const votingEnds = formatShortDateTimeFromSeconds(proposal.votingEnds);
   const submittedBy = truncateAddress(proposal.proposedBy);
 
-  const nextProposalid = idArr[1];
-  const remainingids = nextProposalid && idArr.slice(1, idArr.length);
-
-  // if first prop id is
+  const nextProposalid =
+    idArr[1] &&
+    idArr[1].split(",")[idArr[1].split(",").indexOf(proposalid) + 1];
 
   let intents = [
     <Button
-      action={`/molochv3/${chainid}/${daoid}/proposals/${proposalid}/vote`}
+      action={`/molochv3/${chainid}/${daoid}/proposals/${proposalids}/vote`}
     >
       Votes
     </Button>,
+    <Button.Link
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
+    >
+      Details
+    </Button.Link>,
   ];
+
+  const previousProposalid =
+    idArr[1] &&
+    idArr[1].split(",")[idArr[1].split(",").indexOf(proposalid) - 1];
+
+  if (previousProposalid) {
+    intents.push(
+      <Button
+        action={`/molochv3/${chainid}/${daoid}/proposals/${previousProposalid}_${idArr[1]}`}
+      >
+        Back
+      </Button>
+    );
+  }
 
   if (nextProposalid) {
     intents.push(
       <Button
-        action={`/molochv3/${chainid}/${daoid}/proposals/${remainingids.join(
-          ","
-        )}`}
+        action={`/molochv3/${chainid}/${daoid}/proposals/${nextProposalid}_${idArr[1]}`}
       >
         Next
       </Button>
     );
   }
 
-  intents.push(
-    <Button.Link
-      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
-    >
-      Details
-    </Button.Link>,
-    <Button action={`/molochv3/${chainid}/${daoid}`}>DAO Home</Button>
-  );
+  if (intents.length < 4) {
+    intents.push(
+      <Button action={`/molochv3/${chainid}/${daoid}`}>DAO Home</Button>
+    );
+  }
 
   return c.res({
     action: "/success/execute",

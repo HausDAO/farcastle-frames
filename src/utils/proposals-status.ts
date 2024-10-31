@@ -186,3 +186,23 @@ export const getProposalStatus = (proposal: QueryProposal): ProposalStatus => {
   }
   return PROPOSAL_STATUS["unknown"];
 };
+
+// export const getProposalStatusText = (
+//   status: ProposalStatus,
+//   helper?: string
+// ) => {
+//   return `${PROPOSAL_STATUS_TEXT[status]}${helper || ""}`;
+// };
+
+// const PROPOSAL_STATUS_TEXT: Record<ProposalStatus, string> = {
+//   Unsponsored: "Unknown Status",
+//   Voting: "Voting until",
+//   Grace: "In grace period until",
+//   Expired: "Expired",
+//   Cancelled: "Cancelled",
+//   "Ready for Execution": "Ready to Execute",
+//   Failed: "Failed",
+//   Passed: "Passed",
+//   "Execution Failed": "",
+//   Unknown: "",
+// };
