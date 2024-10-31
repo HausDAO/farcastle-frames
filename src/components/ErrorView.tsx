@@ -11,7 +11,6 @@ export function ErrorView({ message }: ErrorViewProps) {
     <Rows grow>
       <Row
         backgroundColor="darkPurple"
-        color="white"
         textAlign="center"
         textTransform="uppercase"
         alignHorizontal="center"

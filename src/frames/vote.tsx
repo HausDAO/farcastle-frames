@@ -12,7 +12,6 @@ import {
 import { VoteView } from "../components/VoteView.js";
 import {
   formatProposalTitle,
-  formatShortDateTimeFromSeconds,
   getProposalTypeLabel,
   voteCount,
 } from "../utils/dao-data-formatters.js";
@@ -59,20 +58,26 @@ export const voteFrame = async (c) => {
   const yes = voteCount(proposal.yesBalance);
   const no = voteCount(proposal.noBalance);
   const title = formatProposalTitle(proposal.title);
-  const createdAt = formatShortDateTimeFromSeconds(proposal.createdAt);
   const proposalType = getProposalTypeLabel(proposal.proposalType);
 
   console.log("status", status);
   // console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
 
   let intents: FrameIntent | FrameIntent[] = [
-    <Button action={`/proposal/${chainid}/${daoid}/${proposalid}`}>
-      Proposal
+    <Button.Link
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
+    >
+      Details
+    </Button.Link>,
+    <Button action={`/molochv3/${chainid}/${daoid}/proposals/${proposalid}`}>
+      Back
     </Button>,
   ];
   if (status === PROPOSAL_STATUS.voting) {
     intents = [
-      <Button.Transaction target={`/tx/${chainid}/${daoid}/${proposalid}/true`}>
+      <Button.Transaction
+        target={`/tx/vote/${chainid}/${daoid}/${proposalid}/true`}
+      >
         Yes
       </Button.Transaction>,
       <Button.Transaction
@@ -83,16 +88,25 @@ export const voteFrame = async (c) => {
       ...intents,
     ];
   }
+  if (status === PROPOSAL_STATUS.needsProcessing) {
+    intents = [
+      <Button.Transaction
+        target={`/tx/execute/${chainid}/${daoid}/${proposalid}`}
+      >
+        Execute
+      </Button.Transaction>,
+      ...intents,
+    ];
+  }
 
   return c.res({
-    action: "/success/vote",
+    action: `/success/vote/${chainid}/${daoid}`,
     image: (
       <VoteView
         proposalid={proposalid}
         yes={yes}
         no={no}
         name={title}
-        createdAt={createdAt}
         proposalType={proposalType}
       />
     ),

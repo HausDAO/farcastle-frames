@@ -1,10 +1,10 @@
-import { Frog } from "frog";
+import { Button, Frog } from "frog";
 import { devtools } from "frog/dev";
 import { serveStatic } from "frog/serve-static";
 import { FROG_APP_CONFIG } from "./utils/constants.js";
 
 import { daoHomeFrame } from "./frames/dao-home.js";
-import { proposalFrame } from "./frames/proposal.js";
+import { executeTransaction, proposalFrame } from "./frames/proposal.js";
 import { voteFrame, voteTransaction } from "./frames/vote.js";
 import { app as styleApp } from "./frames/style.js";
 import { SuccessView } from "./components/SuccessView.js";
@@ -18,25 +18,32 @@ app.frame("/", (c) => {
   });
 });
 
-app.frame("dao/:chainid/:daoid", async (c) => {
+app.frame("molochv3/:chainid/:daoid", async (c) => {
   return daoHomeFrame(c);
 });
-
-app.frame("proposal/:chainid/:daoid/:proposalids", async (c) => {
+// app.frame("molochv3/:chainid/:daoid/proposals", async (c) => {
+//   return proposalFrame(c);
+// });
+app.frame("molochv3/:chainid/:daoid/proposals/:proposalids", async (c) => {
   return proposalFrame(c);
 });
-app.frame("vote/:chainid/:daoid/:proposalid", async (c) => {
+app.frame("molochv3/:chainid/:daoid/proposals/:proposalid/vote", async (c) => {
   return voteFrame(c);
 });
-
-app.transaction("/tx/:chainid/:daoid/:proposalid/:approved", (c) => {
+app.transaction("tx/vote/:chainid/:daoid/:proposalid/:approved", (c) => {
   return voteTransaction(c);
 });
-
-app.frame("/success/:type", (c) => {
+app.transaction("tx/execute/:chainid/:daoid/:proposalid", (c) => {
+  return executeTransaction(c);
+});
+app.frame("/success/:type/:chainid/:daoid", (c) => {
   const type = c.req.param("type");
+  const chainid = c.req.param("chainid");
+  const daoid = c.req.param("daoid");
+
   return c.res({
     image: <SuccessView type={type} />,
+    intents: <Button action={`/molochv3/${chainid}/${daoid}`}>DAO Home</Button>,
   });
 });
 
