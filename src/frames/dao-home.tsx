@@ -55,6 +55,12 @@ export const daoHomeFrame = async (c) => {
   const proposalIds =
     nextProposalId &&
     daoData.dao.proposals.map((p: { proposalId: string }) => p.proposalId);
+  const proposalParams =
+    proposalIds.length > 1
+      ? `${nextProposalId}_${proposalIds.join(",")}`
+      : proposalIds.join(",");
+
+  console.log("proposalParams", proposalParams);
 
   let intents = [
     <Button.Link
@@ -74,9 +80,7 @@ export const daoHomeFrame = async (c) => {
   if (nextProposalId > 0) {
     intents = [
       <Button
-        action={`/molochv3/${chainid}/${daoid}/proposals/${proposalIds.join(
-          ","
-        )}`}
+        action={`/molochv3/${chainid}/${daoid}/proposals/${proposalParams}`}
       >
         {`${activeProposalCount} Active Proposal${
           activeProposalCount > 1 ? "s" : ""

@@ -27,7 +27,7 @@ app.frame("molochv3/:chainid/:daoid", async (c) => {
 app.frame("molochv3/:chainid/:daoid/proposals/:proposalids", async (c) => {
   return proposalFrame(c);
 });
-app.frame("molochv3/:chainid/:daoid/proposals/:proposalid/vote", async (c) => {
+app.frame("molochv3/:chainid/:daoid/proposals/:proposalids/vote", async (c) => {
   return voteFrame(c);
 });
 app.transaction("tx/vote/:chainid/:daoid/:proposalid/:approved", (c) => {

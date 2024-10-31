@@ -1,5 +1,14 @@
-import { Rows, Row, Box, Heading, Spacer, Columns, Column } from "./ui.js";
-import { Text } from "./ui.js";
+import { PROPOSAL_STATUS } from "../utils/proposals-status.js";
+import {
+  Rows,
+  Row,
+  Box,
+  Heading,
+  Spacer,
+  Columns,
+  Column,
+  Text,
+} from "./ui.js";
 
 interface VoteViewProps {
   proposalid: string | number;
@@ -7,6 +16,8 @@ interface VoteViewProps {
   name: string;
   yes?: string;
   no?: string;
+  status?: string;
+  executable: boolean;
 }
 
 export function VoteView({
@@ -15,6 +26,8 @@ export function VoteView({
   name,
   yes,
   no,
+  status,
+  executable,
 }: VoteViewProps) {
   return (
     <Box grow alignVertical="center" backgroundColor="raisinBlack" padding="32">
@@ -28,7 +41,14 @@ export function VoteView({
           <Heading font="VT323" color="moonstone" size="48">
             {name}
           </Heading>
-          <Spacer size="12" />
+          <Text color="aliceBlue" size="18">
+            {status}
+          </Text>
+          {executable && (
+            <Text color="rustyRed" size="12">
+              *Proposals must be executed in order
+            </Text>
+          )}
         </Row>
         <Row height="3/6">
           <Columns>
