@@ -1,5 +1,8 @@
+import { TX_CHAIN_ID } from "./constants";
+
 const ADDRESS_REGEX = /^(0x)?[0-9a-fA-F]{40}$/;
-const VALID_CHAINS = ["0x2105", "0xa"];
+// const VALID_CHAINS = ["0x2105", "0xa", "0x1", "0x64", "0xa4b1", "0x89"];
+const VALID_CHAINS = Object.keys(TX_CHAIN_ID);
 
 export type EthAddress = `0x${string}`;
 
