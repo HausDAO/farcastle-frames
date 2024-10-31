@@ -58,19 +58,39 @@ export const daoHomeFrame = async (c) => {
 
   let intents = [
     <Button.Link
-      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/members`}
     >
-      on DAOhaus
+      Members
+    </Button.Link>,
+    <Button.Link
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/safes`}
+    >
+      Safes
     </Button.Link>,
   ];
 
+  console.log("nextProposalId", nextProposalId);
+
   if (nextProposalId > 0) {
     intents = [
-      <Button action={`/proposal/${chainid}/${daoid}/${proposalIds.join(",")}`}>
+      <Button
+        action={`/molochv3/${chainid}/${daoid}/proposals/${proposalIds.join(
+          ","
+        )}`}
+      >
         {`${activeProposalCount} Active Proposal${
           activeProposalCount > 1 ? "s" : ""
         }`}
       </Button>,
+      ...intents,
+    ];
+  } else {
+    intents = [
+      <Button.Link
+        href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/proposals`}
+      >
+        Proposals
+      </Button.Link>,
       ...intents,
     ];
   }

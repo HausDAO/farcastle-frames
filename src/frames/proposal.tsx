@@ -66,14 +66,22 @@ export const proposalFrame = async (c) => {
   const nextProposalid = idArr[1];
   const remainingids = nextProposalid && idArr.slice(1, idArr.length);
 
+  // if first prop id is
+
   let intents = [
-    <Button action={`/vote/${chainid}/${daoid}/${proposalid}`}>Votes</Button>,
+    <Button
+      action={`/molochv3/${chainid}/${daoid}/proposals/${proposalid}/vote`}
+    >
+      Votes
+    </Button>,
   ];
 
   if (nextProposalid) {
     intents.push(
       <Button
-        action={`/proposal/${chainid}/${daoid}/${remainingids.join(",")}`}
+        action={`/molochv3/${chainid}/${daoid}/proposals/${remainingids.join(
+          ","
+        )}`}
       >
         Next
       </Button>
@@ -81,12 +89,12 @@ export const proposalFrame = async (c) => {
   }
 
   intents.push(
-    <Button action={`/dao/${chainid}/${daoid}`}>Home</Button>,
     <Button.Link
       href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
     >
-      on DAOhaus
-    </Button.Link>
+      Details
+    </Button.Link>,
+    <Button action={`/molochv3/${chainid}/${daoid}`}>DAO Home</Button>
   );
 
   return c.res({

@@ -47,26 +47,26 @@ export function DaoView({
           <Columns>
             <Column width="1/4" gap="16">
               <Heading font="VT323" color="moonstone" size="32">
+                Proposals
+              </Heading>
+              <Text color="aliceBlue" size="24">
+                {proposalCount}
+              </Text>
+            </Column>
+            <Column width="1/4" gap="16">
+              <Heading font="VT323" color="moonstone" size="32">
                 Members
               </Heading>
               <Text color="aliceBlue" size="24">
                 {memberCount}
               </Text>
             </Column>
-            <Column width="1/4" gap="16">
+            <Column width="2/4" gap="16">
               <Heading font="VT323" color="moonstone" size="32">
                 Safes
               </Heading>
               <Text color="aliceBlue" size="24">
                 {vaultCount}
-              </Text>
-            </Column>
-            <Column width="2/4" gap="16">
-              <Heading font="VT323" color="moonstone" size="32">
-                Proposals
-              </Heading>
-              <Text color="aliceBlue" size="24">
-                {proposalCount}
               </Text>
             </Column>
           </Columns>

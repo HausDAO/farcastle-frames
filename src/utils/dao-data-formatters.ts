@@ -19,8 +19,9 @@ export const normalizeCharacters = (string: string): string => {
   // r = r.replace(new RegExp(/\W/g), "");
   return r;
 };
-export const truncateString = (string: string, length: number) =>
-  `${string.slice(0, length)} ...`;
+export const truncateString = (string: string, length: number) => {
+  return string.length > length ? `${string.slice(0, length)} ...` : string;
+};
 
 export const formatDaoName = (name?: string) => {
   if (!name) return "A DAO with no name";
@@ -28,18 +29,12 @@ export const formatDaoName = (name?: string) => {
 };
 export const formatDaoDescription = (description?: string) => {
   if (!description) return "-";
-  const normal = normalizeCharacters(description);
-  return normal.length > 125
-    ? truncateString(normalizeCharacters(description), 120)
-    : normal;
+  return truncateString(normalizeCharacters(description), 120);
 };
 
 export const formatProposalDescription = (description?: string) => {
   if (!description) return "-";
-  const normal = normalizeCharacters(description);
-  return normal.length > 150
-    ? truncateString(normalizeCharacters(description), 145)
-    : normal;
+  return truncateString(normalizeCharacters(description), 145);
 };
 export const formatDaoImg = (imgPath?: string) => {
   if (!imgPath) return;

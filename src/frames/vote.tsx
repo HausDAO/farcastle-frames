@@ -64,14 +64,14 @@ export const voteFrame = async (c) => {
   // console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
 
   let intents: FrameIntent | FrameIntent[] = [
-    <Button action={`/proposal/${chainid}/${daoid}/${proposalid}`}>
-      Proposal
-    </Button>,
     <Button.Link
       href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
     >
-      on DAOhaus
+      Details
     </Button.Link>,
+    <Button action={`/molochv3/${chainid}/${daoid}/proposals/${proposalid}`}>
+      Back
+    </Button>,
   ];
   if (status === PROPOSAL_STATUS.voting) {
     intents = [
@@ -100,7 +100,7 @@ export const voteFrame = async (c) => {
   }
 
   return c.res({
-    action: "/success/vote",
+    action: `/success/vote/${chainid}/${daoid}`,
     image: (
       <VoteView
         proposalid={proposalid}

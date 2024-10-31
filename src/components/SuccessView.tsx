@@ -3,7 +3,6 @@ import { Rows, Row } from "./ui.js";
 import { Text } from "./ui.js";
 
 interface SuccessViewProps {
-  // 'vote' or 'custom'
   type: string;
   message?: string;
 }
@@ -13,7 +12,6 @@ const messages: {
 } = {
   vote: "Your Vote Counts!",
   execute: "The Proposal has been executed!",
-  custom: "",
 };
 
 export function SuccessView({ type, message }: SuccessViewProps) {
