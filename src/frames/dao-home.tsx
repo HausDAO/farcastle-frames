@@ -50,17 +50,20 @@ export const daoHomeFrame = async (c) => {
     daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
   const description = formatDaoDescription(profile?.description);
   const daoImg = formatDaoImg(profile?.avatarImg);
+
   const nextProposalId =
     Number(activeProposalCount) && Number(daoData.dao.proposals[0].proposalId);
   const proposalIds =
     nextProposalId &&
     daoData.dao.proposals.map((p: { proposalId: string }) => p.proposalId);
-  const proposalParams =
-    proposalIds.length > 1
-      ? `${nextProposalId}_${proposalIds.join(",")}`
-      : proposalIds.join(",");
 
-  console.log("proposalParams", proposalParams);
+  let proposalParams;
+  if (Number(activeProposalCount)) {
+    proposalParams =
+      proposalIds.length > 1
+        ? `${nextProposalId}_${proposalIds.join(",")}`
+        : proposalIds.join(",");
+  }
 
   let intents = [
     <Button.Link
@@ -74,8 +77,6 @@ export const daoHomeFrame = async (c) => {
       Safes
     </Button.Link>,
   ];
-
-  console.log("nextProposalId", nextProposalId);
 
   if (nextProposalId > 0) {
     intents = [

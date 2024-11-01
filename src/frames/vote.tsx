@@ -12,6 +12,7 @@ import {
 import { VoteView } from "../components/VoteView.js";
 import {
   formatProposalTitle,
+  formatShortDateTimeFromSeconds,
   getProposalTypeLabel,
   voteCount,
 } from "../utils/dao-data-formatters.js";
@@ -45,8 +46,6 @@ export const voteFrame = async (c) => {
 
   const proposal = proposalData.proposals[0];
 
-  // console.log("proposal", proposal);
-
   if (!proposal) {
     return c.res({
       image: <ErrorView message="Proposal Not Found" />,
@@ -59,18 +58,19 @@ export const voteFrame = async (c) => {
   const title = formatProposalTitle(proposal.title);
   const proposalType = getProposalTypeLabel(proposal.proposalType);
 
-  console.log("status", status);
   let statusText: string = status;
   if (status === PROPOSAL_STATUS.voting) {
-    statusText = "Voting open until";
+    const votingEnds = formatShortDateTimeFromSeconds(proposal.votingEnds);
+    statusText = `Voting open until ${votingEnds}`;
   }
   if (status === PROPOSAL_STATUS.grace) {
-    statusText = "In grace period until";
+    const graceEnds = formatShortDateTimeFromSeconds(proposal.graceEnds);
+    statusText = `In grace period until ${graceEnds}`;
   }
 
   let intents: FrameIntent | FrameIntent[] = [
     <Button.Link
-      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/proposal/${proposalid}`}
     >
       Details
     </Button.Link>,
@@ -86,7 +86,7 @@ export const voteFrame = async (c) => {
         Yes
       </Button.Transaction>,
       <Button.Transaction
-        target={`/tx/${chainid}/${daoid}/${proposalid}/false`}
+        target={`/tx/vote/${chainid}/${daoid}/${proposalid}/false`}
       >
         No
       </Button.Transaction>,
@@ -128,6 +128,8 @@ export const voteTransaction = (c) => {
   const proposalid = c.req.param("proposalid");
   const approved = c.req.param("approved");
 
+  const voteValue = approved === "true";
+
   return c.contract({
     abi: [
       {
@@ -143,7 +145,7 @@ export const voteTransaction = (c) => {
     ],
     chainId: TX_CHAIN_ID[chainid],
     functionName: "submitVote",
-    args: [Number(proposalid), approved === "true"],
+    args: [Number(proposalid), voteValue],
     to: daoid as `0x${string}`,
   });
 };
