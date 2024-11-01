@@ -2,11 +2,7 @@ import { Button } from "frog";
 import { request } from "graphql-request";
 
 import { GRAPH_URL, TX_CHAIN_ID } from "../utils/constants.js";
-import {
-  GET_DAO,
-  GET_PROPOSAL,
-  GET_PROPOSAL_DATA,
-} from "../utils/graph-queries.js";
+import { GET_PROPOSAL, GET_PROPOSAL_DATA } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
 import { isChainId, isAddress, isNumberish } from "../utils/validators.js";
 import { ProposalView } from "../components/ProposalView.js";
@@ -70,7 +66,7 @@ export const proposalFrame = async (c) => {
       Votes
     </Button>,
     <Button.Link
-      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/proposal/${proposalid}`}
     >
       Details
     </Button.Link>,
@@ -158,80 +154,3 @@ export const executeTransaction = async (c) => {
     to: daoid as `0x${string}`,
   });
 };
-
-// ?/ TODO: how to deal with cached active proposal count
-
-// @ts-ignore
-// export const proposalsFrame = async (c) => {
-//   const chainid = c.req.param("chainid");
-//   const daoid = c.req.param("daoid");
-
-//   // @ts-ignore
-//   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
-//   const url = chainid && GRAPH_URL(chainid, graphKey);
-//   const validDaoid = isAddress(daoid);
-//   const validChainid = isChainId(chainid);
-
-//   if (!validDaoid || !validChainid || !url) {
-//     return c.res({
-//       image: <ErrorView message="Invalid Params" />,
-//     });
-//   }
-
-//   const daoData = await request<any>(url, GET_DAO, {
-//     daoid,
-//     now: Math.floor(nowInSeconds()).toString(),
-//   });
-
-//   if (!daoData.dao) {
-//     return c.res({
-//       image: <ErrorView message="DAO Not Found" />,
-//     });
-//   }
-
-//   const activeProposalCount = daoData.dao.proposals.length || "0";
-
-//   const nextProposalId =
-//     Number(activeProposalCount) && Number(daoData.dao.proposals[0].proposalId);
-//   const proposalIds =
-//     nextProposalId &&
-//     daoData.dao.proposals.map((p: { proposalId: string }) => p.proposalId);
-
-//   // if no active - intent back to dao, intent to view all proposals on daohaus
-//   // // message
-
-//   // if active send to other proposal frame?
-
-//   let intents = [
-//     <Button.Link
-//       href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}`}
-//     >
-//       on DAOhaus
-//     </Button.Link>,
-//   ];
-
-//   if (nextProposalId > 0) {
-//     intents = [
-//       <Button action={`/proposal/${chainid}/${daoid}/${proposalIds.join(",")}`}>
-//         {`${activeProposalCount} Active Proposal${
-//           activeProposalCount > 1 ? "s" : ""
-//         }`}
-//       </Button>,
-//       ...intents,
-//     ];
-//   }
-
-//   return c.res({
-//     image: (
-//       <DaoView
-//         name={name}
-//         description={description}
-//         memberCount={memberCount}
-//         vaultCount={vaultCount}
-//         proposalCount={proposalCount}
-//         img={daoImg}
-//       />
-//     ),
-//     intents,
-//   });
-// };
