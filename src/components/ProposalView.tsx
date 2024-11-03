@@ -1,5 +1,5 @@
-import { Rows, Row, Box, Heading, Spacer, Columns, Column } from "./ui.js";
-import { Text } from "./ui.js";
+import { Rows, Row, Box, Heading, Spacer, Columns, Column } from './ui.js';
+import { Text } from './ui.js';
 
 interface ProposalViewProps {
   proposalid: string | number;
@@ -39,7 +39,7 @@ export function ProposalView({
           <Columns>
             <Column width="3/6" gap="16">
               <Heading font="VT323" color="moonstone" size="32">
-                Submitted by
+                Submitted By
               </Heading>
               <Text color="aliceBlue" size="24">
                 {submittedBy}
@@ -47,7 +47,7 @@ export function ProposalView({
             </Column>
             <Column width="3/6" gap="16">
               <Heading font="VT323" color="moonstone" size="32">
-                Voting ends
+                Voting Ends
               </Heading>
               <Text color="aliceBlue" size="24">
                 {votingEnds}
@@ -55,6 +55,7 @@ export function ProposalView({
             </Column>
           </Columns>
         </Row>
+        <Spacer size="26" />
       </Rows>
     </Box>
   );
