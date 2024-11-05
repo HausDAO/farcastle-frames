@@ -47,6 +47,36 @@ app.frame("/success/:type/:chainid/:daoid", (c) => {
   });
 });
 
+app.frame("/yeet", (c) => {
+  return c.res({
+    image:
+      "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
+    intents: [
+      <Button.MiniApp href="https://app.yeet.haus/#/launch">
+        Open Yeeter
+      </Button.MiniApp>,
+    ],
+  });
+});
+
+// app.composerAction(
+//   "/yeet-launch",
+//   (c) => {
+//     return c.res({
+//       title: "Yeet!",
+//       url: "https://app.yeet.haus/#/launch",
+//     });
+//   },
+//   {
+//     /* Name of the action – 14 characters max. */
+//     name: "yeeterLaunch",
+//     /* Description of the action – 20 characters max. */
+//     description: "Launch a yeet campaign",
+//     icon: "rocket",
+//     imageUrl: "https://app.yeet.haus/apple-touch-icon.png",
+//   }
+// );
+
 app.route("/style", styleApp);
 
 const isCloudflareWorker = typeof caches !== "undefined";
