@@ -1,9 +1,8 @@
 /** @jsxImportSource frog/jsx */
-import { Rows, Row } from "./ui.js";
-import { Text } from "./ui.js";
+import { Rows, Row } from './ui.js';
+import { Heading, Text } from './ui.js';
 
 interface SuccessViewProps {
-  // 'vote' or 'custom'
   type: string;
   message?: string;
 }
@@ -11,7 +10,8 @@ interface SuccessViewProps {
 const messages: {
   [key: string]: string;
 } = {
-  vote: "Your Vote Counts!",
+  vote: 'Vote Counted',
+  execute: 'Proposal Executed',
 };
 
 export function SuccessView({ type, message }: SuccessViewProps) {
@@ -19,15 +19,18 @@ export function SuccessView({ type, message }: SuccessViewProps) {
   return (
     <Rows grow>
       <Row
-        backgroundColor="darkPurple"
-        color="moonstone"
+        backgroundColor="raisinBlack"
         textAlign="center"
         textTransform="uppercase"
         alignHorizontal="center"
         alignVertical="center"
       >
-        <Text size="48">You Win</Text>
-        <Text size="32">{bodyText}</Text>
+        <Heading font="VT323" color="moonstone" size="64">
+          You Win
+        </Heading>
+        <Text color="aliceBlue" size="24">
+          {bodyText}
+        </Text>
       </Row>
     </Rows>
   );

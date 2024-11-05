@@ -7,6 +7,7 @@ export const GET_DAO = gql`
       createdAt
       name
       activeMemberCount
+      proposalCount
       vaults(where: { active: true }) {
         id
       }
@@ -64,8 +65,27 @@ export const GET_PROPOSAL = gql`
       title
       description
       graceEnds
+      votingStarts
       votingEnds
       proposedBy
+      sponsored
+      cancelled
+      passed
+      actionFailed
+      expiration
+      votingPeriod
+      gracePeriod
+      processed
+      noBalance
+      yesBalance
+    }
+  }
+`;
+
+export const GET_PROPOSAL_DATA = gql`
+  query proposal($daoid: String!, $proposalid: String!) {
+    proposals(where: { proposalId: $proposalid, dao: $daoid }) {
+      proposalData
     }
   }
 `;

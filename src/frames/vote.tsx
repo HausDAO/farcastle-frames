@@ -17,14 +17,13 @@ import {
   voteCount,
 } from "../utils/dao-data-formatters.js";
 
-// TODO: find out of user is a member
-// intents based on in voting
-
 // @ts-ignore
 export const voteFrame = async (c) => {
   const chainid = c.req.param("chainid");
   const daoid = c.req.param("daoid");
-  const proposalid = c.req.param("proposalid");
+  const proposalids = c.req.param("proposalids");
+  const idArr = proposalids.split("_");
+  const proposalid = idArr[0];
 
   // @ts-ignore
   const graphKey = c.env?.GRAPH_KEY || process.env.GRAPH_KEY;
@@ -47,8 +46,6 @@ export const voteFrame = async (c) => {
 
   const proposal = proposalData.proposals[0];
 
-  console.log("proposal", proposal);
-
   if (!proposal) {
     return c.res({
       image: <ErrorView message="Proposal Not Found" />,
@@ -59,41 +56,65 @@ export const voteFrame = async (c) => {
   const yes = voteCount(proposal.yesBalance);
   const no = voteCount(proposal.noBalance);
   const title = formatProposalTitle(proposal.title);
-  const createdAt = formatShortDateTimeFromSeconds(proposal.createdAt);
   const proposalType = getProposalTypeLabel(proposal.proposalType);
 
-  console.log("status", status);
-  console.log("PROPOSAL_STATUS.voting", PROPOSAL_STATUS.voting);
+  let statusText: string = status;
+  if (status === PROPOSAL_STATUS.voting) {
+    const votingEnds = formatShortDateTimeFromSeconds(proposal.votingEnds);
+    statusText = `Voting open until ${votingEnds}`;
+  }
+  if (status === PROPOSAL_STATUS.grace) {
+    const graceEnds = formatShortDateTimeFromSeconds(proposal.graceEnds);
+    statusText = `In grace period until ${graceEnds}`;
+  }
 
   let intents: FrameIntent | FrameIntent[] = [
-    <Button action={`/proposal/${chainid}/${daoid}/${proposalid}`}>
-      Proposal
+    <Button.Link
+      href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/proposal/${proposalid}`}
+    >
+      Details
+    </Button.Link>,
+    <Button action={`/molochv3/${chainid}/${daoid}/proposals/${proposalids}`}>
+      Back
     </Button>,
   ];
   if (status === PROPOSAL_STATUS.voting) {
     intents = [
-      <Button.Transaction target={`/tx/${chainid}/${daoid}/${proposalid}/true`}>
+      <Button.Transaction
+        target={`/tx/vote/${chainid}/${daoid}/${proposalid}/true`}
+      >
         Yes
       </Button.Transaction>,
       <Button.Transaction
-        target={`/tx/${chainid}/${daoid}/${proposalid}/false`}
+        target={`/tx/vote/${chainid}/${daoid}/${proposalid}/false`}
       >
         No
       </Button.Transaction>,
       ...intents,
     ];
   }
+  if (status === PROPOSAL_STATUS.needsProcessing) {
+    intents = [
+      <Button.Transaction
+        target={`/tx/execute/${chainid}/${daoid}/${proposalid}`}
+      >
+        Execute
+      </Button.Transaction>,
+      ...intents,
+    ];
+  }
 
   return c.res({
-    action: "/success/vote",
+    action: `/success/vote/${chainid}/${daoid}`,
     image: (
       <VoteView
         proposalid={proposalid}
         yes={yes}
         no={no}
         name={title}
-        createdAt={createdAt}
         proposalType={proposalType}
+        status={statusText}
+        executable={status === PROPOSAL_STATUS.needsProcessing}
       />
     ),
     intents,
@@ -106,6 +127,8 @@ export const voteTransaction = (c) => {
   const daoid = c.req.param("daoid");
   const proposalid = c.req.param("proposalid");
   const approved = c.req.param("approved");
+
+  const voteValue = approved === "true";
 
   return c.contract({
     abi: [
@@ -122,7 +145,7 @@ export const voteTransaction = (c) => {
     ],
     chainId: TX_CHAIN_ID[chainid],
     functionName: "submitVote",
-    args: [Number(proposalid), approved === "true"],
+    args: [Number(proposalid), voteValue],
     to: daoid as `0x${string}`,
   });
 };

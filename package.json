@@ -6,12 +6,13 @@
     "dev": "frog dev",
     "wrangler:dev": "wrangler dev src/index.tsx",
     "wrangler:deploy": "wrangler deploy --minify src/index.tsx",
+    "wrangler:deploy:staging": "wrangler deploy --env staging --minify src/index.tsx",
     "wrangler:static": "cp -r ./node_modules/frog/_lib/ui/.frog ./public/frog"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
-    "frog": "latest",
+    "frog": "^0.18.0",
     "graphql-request": "^7.1.0",
     "hono": "^4.6.3",
     "viem": "^2.21.27"
