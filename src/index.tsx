@@ -52,7 +52,7 @@ app.frame("/yeet", (c) => {
     image:
       "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
     intents: [
-      <Button.MiniApp href="https://app.yeet.haus/#/launch">
+      <Button.MiniApp href="https://app.yeet.haus/#/launch" prompt={true}>
         Open Yeeter
       </Button.MiniApp>,
     ],
