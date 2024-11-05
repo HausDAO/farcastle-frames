@@ -1,4 +1,4 @@
-import { PROPOSAL_STATUS } from "../utils/proposals-status.js";
+import { PROPOSAL_STATUS } from '../utils/proposals-status.js';
 import {
   Rows,
   Row,
@@ -8,7 +8,7 @@ import {
   Columns,
   Column,
   Text,
-} from "./ui.js";
+} from './ui.js';
 
 interface VoteViewProps {
   proposalid: string | number;
@@ -32,7 +32,7 @@ export function VoteView({
   return (
     <Box grow alignVertical="center" backgroundColor="raisinBlack" padding="32">
       <Rows>
-        <Row height="3/6">
+        <Row height="5/6">
           <Text color="aliceBlue" size="18">
             {`${proposalid} | ${proposalType}`}
           </Text>
@@ -41,7 +41,8 @@ export function VoteView({
           <Heading font="VT323" color="moonstone" size="48">
             {name}
           </Heading>
-          <Text color="aliceBlue" size="18">
+          <Spacer size="12" />
+          <Text color="aliceBlue" size="24">
             {status}
           </Text>
           {executable && (
@@ -50,26 +51,27 @@ export function VoteView({
             </Text>
           )}
         </Row>
-        <Row height="3/6">
+        <Row height="1/6">
           <Columns>
-            <Column width="1/2" gap="12">
-              <Heading font="VT323" color="rasedaGreen" size="48">
+            <Column width="1/4" gap="16">
+              <Heading font="VT323" color="moonstone" size="32">
                 Yes
               </Heading>
-              <Text color="rasedaGreen" size="48">
+              <Text color="rasedaGreen" size="24">
                 {yes}
               </Text>
             </Column>
-            <Column width="1/2" gap="12">
-              <Heading font="VT323" color="rustyRed" size="48">
+            <Column width="1/4" gap="16">
+              <Heading font="VT323" color="moonstone" size="32">
                 No
               </Heading>
-              <Text color="rustyRed" size="48">
+              <Text color="rustyRed" size="24">
                 {no}
               </Text>
             </Column>
           </Columns>
         </Row>
+        <Spacer size="26" />
       </Rows>
     </Box>
   );
