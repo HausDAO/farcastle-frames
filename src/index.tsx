@@ -47,35 +47,36 @@ app.frame("/success/:type/:chainid/:daoid", (c) => {
   });
 });
 
-app.frame("/yeet", (c) => {
-  return c.res({
-    image:
-      "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
-    intents: [
-      <Button.MiniApp href="/yeet-launch" prompt={true}>
-        Open Yeeter
-      </Button.MiniApp>,
-    ],
-  });
-});
+// app.frame("/yeet", (c) => {
+//   return c.res({
+//     image:
+//       "https://daohaus.mypinata.cloud/ipfs/QmaMUgNbwFpVp7KDLPPUQtuJfZ9GaySNBd6D74bizLLhsu",
+//     intents: [
+//       <Button.MiniApp href="/yeet-launch" prompt={true}>
+//         Open Yeeter
+//       </Button.MiniApp>,
+//       <Button action="/yeet-launch">Open Yeeter 2</Button>,
+//     ],
+//   });
+// });
 
-app.composerAction(
-  "/yeet-launch",
-  (c) => {
-    return c.res({
-      title: "Yeet!",
-      url: "https://app.yeet.haus/#/launch",
-    });
-  },
-  {
-    /* Name of the action – 14 characters max. */
-    name: "yeeterLaunch",
-    /* Description of the action – 20 characters max. */
-    description: "Launch a yeet campaign",
-    icon: "rocket",
-    imageUrl: "https://app.yeet.haus/apple-touch-icon.png",
-  }
-);
+// app.composerAction(
+//   "/yeet-launch",
+//   (c) => {
+//     return c.res({
+//       title: "Yeet!",
+//       url: "https://app.yeet.haus/#/launch",
+//     });
+//   },
+//   {
+//     /* Name of the action – 14 characters max. */
+//     name: "yeeterLaunch",
+//     /* Description of the action – 20 characters max. */
+//     description: "Launch a yeet campaign",
+//     icon: "rocket",
+//     imageUrl: "https://app.yeet.haus/apple-touch-icon.png",
+//   }
+// );
 
 app.route("/style", styleApp);
 
