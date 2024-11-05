@@ -12,8 +12,8 @@ dependencies:
     specifier: ^16.4.5
     version: 16.4.5
   frog:
-    specifier: latest
-    version: 0.17.3(hono@4.6.3)
+    specifier: ^0.18.0
+    version: 0.18.0(hono@4.6.3)
   graphql-request:
     specifier: ^7.1.0
     version: 7.1.0(graphql@16.9.0)
@@ -1122,8 +1122,8 @@ packages:
     dependencies:
       to-regex-range: 5.0.1
 
-  /frog@0.17.3(hono@4.6.3):
-    resolution: {integrity: sha512-ppwFJidgqe4AYqB00Zqnm4Xb7yEVpmXL3uZH/XmK7lfUBXEugZlT4lG5+Ztzaw6BPbGMNH484FiJPoHOwkHFqA==}
+  /frog@0.18.0(hono@4.6.3):
+    resolution: {integrity: sha512-bE4hIG07ygfEn/T79QqxvITUoEf5Jgh5GWrMvIZdRdLd39isVe2qpaGnc7U10YhjEwGzFMwEgOkpgrqE9cvMiQ==}
     hasBin: true
     peerDependencies:
       hono: ^4.4.4
@@ -1144,7 +1144,7 @@ packages:
       fast-glob: 3.3.2
       fs-extra: 11.2.0
       hono: 4.6.3
-      hono-og: 0.0.28(hono@4.6.3)
+      hono-og: 0.0.29(hono@4.6.3)
       jose: 5.9.3
       lz-string: 1.5.0
       path-browserify: 1.0.1
@@ -1245,8 +1245,8 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  /hono-og@0.0.28(hono@4.6.3):
-    resolution: {integrity: sha512-UN5KSkL7igeW1qWgGrTB85UqnARE1sDPEmio9EYqM5zkmLYCcwbj8TLgo0PW1hYHsfx1xf2ntoK1H0oyaFgKeg==}
+  /hono-og@0.0.29(hono@4.6.3):
+    resolution: {integrity: sha512-j/rWd4c9o8bSysOWnc4CiLaTX79DF8uTxHG9g/J+FeVYDND17uXL7sgmMcRZZXP6QjsrqTFf/Vpmyk1OfJwhTg==}
     peerDependencies:
       hono: '>=3'
     dependencies:
