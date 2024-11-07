@@ -103,7 +103,6 @@ export const proposalFrame = async (c) => {
   }
 
   return c.res({
-    action: `/success/execute/${chainid}/${daoid}`,
     image: (
       <ProposalView
         proposalid={proposalid}
