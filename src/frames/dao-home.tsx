@@ -4,7 +4,7 @@ import { request } from "graphql-request";
 import { GRAPH_URL } from "../utils/constants.js";
 import { GET_DAO } from "../utils/graph-queries.js";
 import { ErrorView } from "../components/ErrorView.js";
-import { nowInSeconds, parseContent } from "../utils/helpers.js";
+import { parseContent } from "../utils/helpers.js";
 import { isChainId, isAddress } from "../utils/validators.js";
 import { DaoView } from "../components/DaoView.js";
 import {
@@ -12,6 +12,7 @@ import {
   formatDaoImg,
   formatDaoName,
 } from "../utils/dao-data-formatters.js";
+import { filterActive } from "../utils/proposals-status.js";
 
 // @ts-ignore
 export const daoHomeFrame = async (c) => {
@@ -32,7 +33,6 @@ export const daoHomeFrame = async (c) => {
 
   const daoData = await request<any>(url, GET_DAO, {
     daoid,
-    now: Math.floor(nowInSeconds()).toString(),
   });
 
   if (!daoData.dao) {
@@ -42,9 +42,10 @@ export const daoHomeFrame = async (c) => {
   }
 
   const name = formatDaoName(daoData.dao.name);
-  const vaultCount = daoData.dao.vaults.length || "0";
-  const activeProposalCount = daoData.dao.proposals.length || "0";
+  const proposals = filterActive(daoData.dao.proposals);
+  const activeProposalCount = proposals.length || "0";
   const proposalCount = daoData.dao.proposalCount;
+  const vaultCount = daoData.dao.vaults.length || "0";
   const memberCount = daoData.dao.activeMemberCount;
   const profile =
     daoData.dao.profile[0] && parseContent(daoData.dao.profile[0].content);
@@ -52,13 +53,11 @@ export const daoHomeFrame = async (c) => {
   const daoImg = formatDaoImg(profile?.avatarImg);
 
   const nextProposalId =
-    Number(activeProposalCount) && Number(daoData.dao.proposals[0].proposalId);
-  const proposalIds =
-    nextProposalId &&
-    daoData.dao.proposals.map((p: { proposalId: string }) => p.proposalId);
+    Number(activeProposalCount) && Number(proposals[0].proposalId);
+  const proposalIds = nextProposalId && proposals.map((p) => p.proposalId);
 
   let proposalParams;
-  if (Number(activeProposalCount)) {
+  if (Number(activeProposalCount) && proposalIds) {
     proposalParams =
       proposalIds.length > 1
         ? `${nextProposalId}_${proposalIds.join(",")}`
@@ -84,7 +83,7 @@ export const daoHomeFrame = async (c) => {
         action={`/molochv3/${chainid}/${daoid}/proposals/${proposalParams}`}
       >
         {`${activeProposalCount} Active Proposal${
-          activeProposalCount > 1 ? "s" : ""
+          Number(activeProposalCount) > 1 ? "s" : ""
         }`}
       </Button>,
       ...intents,

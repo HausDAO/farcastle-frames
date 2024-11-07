@@ -68,6 +68,8 @@ export const voteFrame = async (c) => {
     statusText = `In grace period until ${graceEnds}`;
   }
 
+  let action = "vote";
+
   let intents: FrameIntent | FrameIntent[] = [
     <Button.Link
       href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/proposal/${proposalid}`}
@@ -94,6 +96,7 @@ export const voteFrame = async (c) => {
     ];
   }
   if (status === PROPOSAL_STATUS.needsProcessing) {
+    action = "execute";
     intents = [
       <Button.Transaction
         target={`/tx/execute/${chainid}/${daoid}/${proposalid}`}
@@ -105,7 +108,7 @@ export const voteFrame = async (c) => {
   }
 
   return c.res({
-    action: `/success/vote/${chainid}/${daoid}`,
+    action: `/success/${action}/${chainid}/${daoid}`,
     image: (
       <VoteView
         proposalid={proposalid}
