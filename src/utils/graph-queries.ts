@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 
 export const GET_DAO = gql`
-  query dao($daoid: String!, $now: String!) {
+  query dao($daoid: String!) {
     dao(id: $daoid) {
       id
       createdAt
@@ -15,13 +15,22 @@ export const GET_DAO = gql`
         first: 101
         orderBy: createdAt
         orderDirection: desc
-        where: { cancelled: false, sponsored: true, graceEnds_gt: $now }
+        where: {
+          cancelled: false
+          sponsored: true
+          processed: false
+          actionFailed: false
+        }
       ) {
         id
         proposalId
         proposalType
         title
         description
+        noBalance
+        yesBalance
+        currentlyPassing
+        graceEnds
       }
       profile: records(
         first: 1
@@ -31,27 +40,6 @@ export const GET_DAO = gql`
       ) {
         content
       }
-    }
-  }
-`;
-
-export const GET_PROPOSALS = gql`
-  query proposals($daoid: String!, $skip: Int!, $now: String!) {
-    proposals(
-      first: 3
-      skip: $skip
-      orderBy: createdAt
-      orderDirection: desc
-      where: {
-        dao: $daoid
-        sponsored: true
-        cancelled: false
-        graceEnds_gt: $now
-      }
-    ) {
-      id
-      createdAt
-      proposalId
     }
   }
 `;

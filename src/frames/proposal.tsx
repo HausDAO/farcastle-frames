@@ -63,7 +63,7 @@ export const proposalFrame = async (c) => {
     <Button
       action={`/molochv3/${chainid}/${daoid}/proposals/${proposalids}/vote`}
     >
-      Vote
+      Votes
     </Button>,
     <Button.Link
       href={`https://admin.daohaus.club/#/molochv3/${chainid}/${daoid}/proposal/${proposalid}`}
