@@ -192,7 +192,7 @@ export const getProposalStatus = (proposal: QueryProposal): ProposalStatus => {
 export const filterActive = (proposals: QueryProposal[]) => {
   const now = nowInSeconds();
   return proposals.filter((proposal) => {
-    if (Number(proposal.graceEnds) > now) return;
+    if (Number(proposal.graceEnds) > now) return true;
     return proposal.currentlyPassing;
   });
 };
