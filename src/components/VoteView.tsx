@@ -45,9 +45,10 @@ export function VoteView({
           <Text color="aliceBlue" size="24">
             {status}
           </Text>
+          <Spacer size="12" />
           {executable && (
-            <Text color="rustyRed" size="12">
-              *Proposals must be executed in order
+            <Text color="rustyRed" size="18">
+              * Proposals must be executed in order
             </Text>
           )}
         </Row>
