@@ -77,7 +77,7 @@ export const daoHomeFrame = async (c) => {
     </Button.Link>,
   ];
 
-  if (nextProposalId > 0) {
+  if (Number(activeProposalCount) > 0) {
     intents = [
       <Button
         action={`/molochv3/${chainid}/${daoid}/proposals/${proposalParams}`}
