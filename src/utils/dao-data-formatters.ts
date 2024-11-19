@@ -34,7 +34,7 @@ export const formatDaoDescription = (description?: string) => {
 
 export const formatProposalDescription = (description?: string) => {
   if (!description) return "-";
-  return truncateString(normalizeCharacters(description), 145);
+  return truncateString(normalizeCharacters(description), 135);
 };
 export const formatDaoImg = (imgPath?: string) => {
   if (!imgPath) return;
