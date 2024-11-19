@@ -84,7 +84,7 @@ export const formatShortDateTimeFromSeconds = (
     return;
   }
 
-  return format(new Date(Number(seconds) * 1000), "MMM do, p");
+  return format(new Date(Number(seconds) * 1000), "MMM do, p z");
 };
 
 export const voteCount = (amt: string): string => {
